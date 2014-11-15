@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EDI Results</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.10.1/dijit/themes/claro/claro.css" />
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link rel="stylesheet" href="./css/ecmap.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet-src.js"></script>
+    <script>dojoConfig = {parseOnLoad: true}</script>
+    <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.1/dojo/dojo.js" data-dojo-config="async:true"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="./data/CommunityResults.js" type="text/javascript"></script>
+    <script src="./data/SubcommunityResults.js" type="text/javascript"></script>
+    <script src="./data/SuppressedCommunities.js" type="text/javascript"></script>
+    <script src="./data/SuppressedSubcommunities.js" type="text/javascript"></script>
+    <script src="./js/ColourRenderers.js" type="text/javascript"></script>
+    <script src="./js/CommunityInfo.js" type="text/javascript"></script>
+    <script src="./js/CreatePies.js" type="text/javascript"></script>
+    <script src="./js/ExternalControls.js" type="text/javascript"></script>
+    <script src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1", "packages":["corechart"]}]}'></script>
+
+    <style type="text/css">
+      #map {
+        height: 80%;
+      }
+    </style>
+  </head>
+  <body class="claro">
+    <div id="wrapper">
+      <div id="header" class="shadow roundedCorners">
+        <div id="title">This cannot be dynamic anymore</div>
+        <div id="subtitle">Number of EDIs usable</div>
+        <div id="logoDiv"><a href="http://www.ecmap.ca" target="_blank"><img src="http://www.ecmaps.ca/images/image002.png" id='logo'></a></div>
+      </div>
+      <div id="map" class="roundedCorners shadow"></div>
+      <div id="rightPane" class="roundedCorners shadow">
+        <div data-dojo-type="dijit/layout/TabContainer" style="width: 100%; height: 200px;">
+          <div data-dojo-type="dijit/layout/ContentPane" title="Info" data-dojo-props="selected:true">
+              <div id="infoPane">Click on an ECD community</div>
+          </div>
+          <div data-dojo-type="dijit/layout/ContentPane" title="Physical">
+              <div id="physPane">Click on an ECD community</div>
+          </div>
+          <div data-dojo-type="dijit/layout/ContentPane" title="Social">
+              <div id="socPane">Click on an ECD community</div>
+          </div>
+          <div data-dojo-type="dijit/layout/ContentPane" title="Emotional">
+              <div id="emotPane">Click on an ECD community</div>
+          </div>
+          <div data-dojo-type="dijit/layout/ContentPane" title="Language">
+              <div id="langcogPane">Click on an ECD community</div>
+          </div>
+          <div data-dojo-type="dijit/layout/ContentPane" title="Communication">
+              <div id="comgenPane">Click on an ECD community</div>
+          </div>
+        </div>
+        <br/>
+        <div>Set layer transparency<br/></div>
+        <div id="horizontalSlider"
+          style="width:180px;"
+          name="horizontalSlider"
+          data-dojo-type="dijit/form/HorizontalSlider"
+          data-dojo-props="value:0.8,
+          minimum: 0,
+          maximum:1,
+          discreteValues:11,
+          intermediateChanges:true,
+          showButtons:false,
+          onChange: layerOpacity">
+          <ol data-dojo-type="dijit/form/HorizontalRuleLabels" container="topDecoration"
+              style="height:1.5em;font-size:75%;color:gray;">
+              <li> </li>
+              <li>20%</li>
+              <li>40%</li>
+              <li>60%</li>
+              <li>80%</li>
+              <li> </li>
+          </ol>
+          <div data-dojo-type="dijit/form/HorizontalRule" container="bottomDecoration"
+              count=11 style="height:5px;"></div>
+          <ol data-dojo-type="dijit/form/HorizontalRuleLabels" container="bottomDecoration"
+              style="height:1em;font-size:75%;color:gray;">
+              <li>0%</li>
+              <li>50%</li>
+              <li>100%</li>
+          </ol>
+      </div>
+      </div>
+      <div id="footer" class="shadow roundedCorners">
+        <div id="notes">Please note: Communities or subcommunities with insufficient data appear in grey.</div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      require(["dojo/parser", "dijit/layout/TabContainer", "dijit/layout/ContentPane"]);
+      var osmUrl='http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
+      var osmAttrib='&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>';
+      var topoUrl='http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}';
+      var topoAttrib='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+      var imageryUrl='http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+      var imageryAttrib='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+      var osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});
+      var topo = new L.TileLayer(topoUrl, {attribution: topoAttrib});
+      var imagery = new L.TileLayer(imageryUrl, {attribution: imageryAttrib});
+
+      var map = L.map('map', {
+        center: [54.5, -115.5],
+        zoom: 6,
+        layers: [topo]
+      });
+
+      function onEachFeature(feature, layer) {
+        layer.on({
+//          mouseover: highlightFeature,
+//          mouseout: resetHighlight,
+          click: communityInfo
+        });
+      }
+
+      function onEachSuppressedFeature(feature, layer) {
+        layer.on({
+//          mouseover: highlightFeature,
+//          mouseout: resetHighlight,
+          click: suppressedInfo
+        });
+      }
+
+       var geojsonCommunity = L.geoJson(communityResults, {
+        style: styleValidEDI,
+        onEachFeature: onEachFeature
+      });
+
+      var geojsonSubcommunity = L.geoJson(subcommunityResults, {
+        style: styleValidEDI,
+        onEachFeature: onEachFeature
+      });
+
+      var geojsonSuppressedCommunities = L.geoJson(suppressedCommunities, {
+        style: styleSuppressedEDI,
+        onEachFeature: onEachSuppressedFeature
+      });
+
+      var geojsonSuppressedSubcommunities = L.geoJson(suppressedSubcommunities, {
+        style: styleSuppressedEDI,
+        onEachFeature: onEachSuppressedFeature
+      });
+
+      var baseMaps = {
+        "Topographic": topo,
+        "Satellite": imagery,
+        "Open Street Map": osm
+      };
+
+      var communities = L.featureGroup([geojsonCommunity, geojsonSuppressedCommunities]).addTo(map);
+      var subcommunities = L.featureGroup([geojsonSubcommunity, geojsonSuppressedSubcommunities]);
+      var overlays = {
+        "ECD communities": communities,
+        "ECD subcommunities": subcommunities
+      };
+      L.control.layers(baseMaps, overlays, {position: 'topleft', collapsed: false}).addTo(map);
+      L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
+
+      var legend = L.control({position: 'bottomleft'});
+
+      legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend'),
+          grades = [48, 141, 295, 528, 1259],
+          labels = ['<b>Number of EDIs useable</b>'],
+          from, to;
+
+        for (var i = 0; i < grades.length; i++) {
+          from = grades[i];
+          to = grades[i+1];
+          text = from + (to ? '&ndash;' + to : '&ndash;3088')
+          labels.push('<i style="background:' + getEDICountColour(from + 1) + '"></i> ' + text);
+        }
+        labels.push('<i style="background:#9C9C9C"></i> Insufficient data');
+        div.innerHTML = labels.join('<br/><br/>');
+        return div;
+      };
+      legend.addTo(map);
+
+   </script>
+  </body>
+</html>
