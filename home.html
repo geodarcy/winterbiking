@@ -1,3 +1,5 @@
+<?php  ?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -29,8 +31,10 @@
         <div id="notes"></div>
       </div>
     </div>
-    <script type="text/javascript">
+    <script>
 			var pos = L.GeoIP.getPosition();
+
+      <?php include "./php/readwbjson.php"; ?>
 
       var map = L.map('map', {
         center: [pos.lat, pos.lng],
