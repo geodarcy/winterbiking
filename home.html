@@ -17,8 +17,8 @@
     <script src="./js/featureFunctions.js" type="text/javascript"></script>
     <script src="./data/winterbiking.js" type="text/javascript"></script>
     <script>dojoConfig = {parseOnLoad: true}</script>
-<!--    <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.1/dojo/dojo.js" data-dojo-config="async:true"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+    <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.1/dojo/dojo.js" data-dojo-config="async:true"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   </head>
   <body>
     <div id="wrapper">
@@ -51,10 +51,24 @@
 
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
+      drawnItems.on('layeradd', styleMarkers);
+      drawnItems.on('layeradd', function(e) {
+        if(e.layer.feature.geometry.type == "Point") {
+//          console.log(e);
+          fadeOldMarkers(e.layer);
+        }
+      });
+      drawnItems.on('layeradd', function(e) {
+        if(e.layer.feature.geometry.type == "LineString") {
+//          console.log(e);
+          fadeOldLines(e.layer);
+        }
+      });
+
       var bikeJson = L.geoJson(bikeEdits, {
         onEachFeature: initBikeJson
       });
-      drawnItems.addLayer(bikeJson);
+//      drawnItems.addLayer(bikeJson);
 
       var drawControl = new L.Control.Draw({
         draw: {
@@ -71,7 +85,7 @@
       map.on('draw:created', function (e) {
         var type = e.layerType,
             layer = e.layer;
-        map.addLayer(layer);
+        drawnItems.addLayer(layer);
       });
     </script>
   </body>

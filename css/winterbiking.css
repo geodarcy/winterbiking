@@ -11,7 +11,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  background-image: url("http://www.ecmaps.ca/images/banner_test-01.jpg");
+/*  background-image: url("./images/headerbanner.jpg"); */
 }
 
 #footer {
@@ -27,7 +27,7 @@
   width: 100%;
   margin: 5px 5px;
   font-family: "arial", "sans-serif";
-  background-image: url("http://www.ecmaps.ca/images/banner_test-01.jpg");
+/*  background-image: url("./images/headerbanner.jpg"); */
 }
 
 .roundedCorners {
@@ -125,7 +125,7 @@
   margin:5px;
   font-family: "arial", "sans-serif";
   font-size:0.75em;
-  background-image: url("http://www.ecmaps.ca/images/pane_70-75-01.jpg");
+/*  background-image: url("./images/headerbanner.jpg"); */
 }
 
 #leftPane{
