@@ -51,19 +51,6 @@
 
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
-      drawnItems.on('layeradd', styleMarkers);
-      drawnItems.on('layeradd', function(e) {
-        if(e.layer.feature.geometry.type == "Point") {
-//          console.log(e);
-          fadeOldMarkers(e.layer);
-        }
-      });
-      drawnItems.on('layeradd', function(e) {
-        if(e.layer.feature.geometry.type == "LineString") {
-//          console.log(e);
-          fadeOldLines(e.layer);
-        }
-      });
 
       var bikeJson = L.geoJson(bikeEdits, {
         onEachFeature: initBikeJson
