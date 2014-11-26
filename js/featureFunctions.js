@@ -12,17 +12,75 @@ var hazardIcon = L.icon({
   popupAnchor: [-3, -15]
 });
 
+var currentLayer;
+
+function changeCondition(value) {
+  currentLayer.feature.properties.Condition = value;
+  currentLayer.feature.properties.last_edited_date = new Date();
+  updateAllMarkers();
+}
+
+function changeComment(value) {
+  currentLayer.feature.properties.Comment = value;
+  currentLayer.feature.properties.last_edited_date = new Date();
+  updateAllMarkers();
+}
+
+function changeCreator(value) {
+  currentLayer.feature.properties.created_user = value;
+  currentLayer.feature.properties.last_edited_date = new Date();
+  updateAllMarkers();
+}
+
+function updateAllMarkers() {
+  drawnItems.eachLayer(function(layer) {
+    styleMarkers(layer);
+    var popupText = createPopup(layer);
+    layer.bindPopup(popupText);
+  });
+
+}
+
+function createPopup(layer) {
+  var myLayer = layer;
+  var popupText = "Condition: <select id='condition' onchange='changeCondition(this.value)'>";
+  if (!layer.feature.properties.Condition)
+    popupText += "<option disabled selected='selected'>Select a riding condition</option><option";
+  else
+    popupText += "<option";
+  if (layer.feature.geometry.type == "LineString") {
+    if (layer.feature.properties.Condition == 'Good')
+      popupText += " selected='selected' ";
+    popupText += ">Good</option><option";
+    if (layer.feature.properties.Condition == 'Fair')
+      popupText += " selected='selected' ";
+    popupText += ">Fair</option><option";
+    if (layer.feature.properties.Condition == 'Poor')
+      popupText += " selected='selected' ";
+    popupText += ">Poor</option></select></br>";
+  }
+  if (layer.feature.geometry.type == "Point") {
+    if (layer.feature.properties.Condition == 'Caution')
+      popupText += " selected='selected' ";
+    popupText += ">Caution</option><option";
+    if (layer.feature.properties.Condition == 'Hazard')
+      popupText += " selected='selected' ";
+    popupText += ">Hazard</option></select></br>";
+  }
+  popupText += "Comment: <textarea onchange='changeComment(this.value)' tabindex='1'>" + layer.feature.properties.Comment + "</textarea><br>";
+  popupText += "Created By: <textarea onchange='changeCreator(this.value)' tabindex='2'>" + layer.feature.properties.created_user + "</textarea><br>";
+  popupText += "Created On: <b>" + layer.feature.properties.last_edited_date.toDateString() + "</b>";
+  return popupText;
+}
+
 function initBikeJson (feature, layer) {
   var tempLayer = layer;
   tempLayer.feature = layer.feature;
-  var popupText = "Condition: <b>" + layer.feature.properties.Condition + "</b><br>";
-  if (layer.feature.properties.Comment)
-    popupText += "Comment: <b>" + layer.feature.properties.Comment + "</b><br>";
-  if (layer.feature.properties.created_user)
-    popupText += "Created By: <b>" + layer.feature.properties.created_user + "</b><br>";
-  popupText += "Created On: <b>" + layer.feature.properties.last_edited_date + "</b>";
-  tempLayer.bindPopup(popupText);
 //  console.log(tempLayer);
+  tempLayer.feature.properties.last_edited_date = new Date(tempLayer.feature.properties.last_edited_date);
+  var popupText = createPopup(tempLayer);
+  tempLayer.bindPopup(popupText);
+  tempLayer.on('popupopen', function(){currentLayer = tempLayer;});
   styleMarkers(tempLayer);
   if (tempLayer.feature.geometry.type == "LineString")
     fadeOldLines(tempLayer);
@@ -82,4 +140,17 @@ function fadeOldPoints (layer) {
     else
       layer.setOpacity(0.1);
   }
+}
+
+function initNewLayer(layer) {
+  layerGeoJSON = layer.toGeoJSON()
+  layerGeoJSON.properties.last_edited_date = new Date();
+  layerGeoJSONNewClass = L.geoJson(layerGeoJSON)
+  layerForDrawnItems = layerGeoJSONNewClass._layers[Object.keys(layerGeoJSONNewClass._layers)[0]]
+  var popupText = createPopup(layerForDrawnItems);
+  layerForDrawnItems.bindPopup(popupText);
+  currentLayer = layerForDrawnItems;
+  drawnItems.addLayer(layerForDrawnItems);
+  drawnItems._layers[Object.keys(drawnItems._layers)[Object.keys(drawnItems._layers).length - 1]].openPopup()
+//  console.log(layerGeoJSONNewClass._layers[Object.keys(layerGeoJSONNewClass._layers)[0]]);
 }

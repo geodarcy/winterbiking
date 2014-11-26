@@ -106,7 +106,8 @@
   top: 80px;
   bottom: 35px;
   left: 0px;
-  right: 210px;
+  right: 0px;
+/*  right: 210px; use this one if there's a right pane */
   margin:5px;
   background-color:#FFF;
   border:solid 2px #B8B8B8;

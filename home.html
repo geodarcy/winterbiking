@@ -27,10 +27,10 @@
         <div id="subtitle">What are the conditions for your ride?</div>
       </div>
       <div id="map" class="roundedCorners shadow"></div>
-      <div id="rightPane" class="roundedCorners shadow">
-      </div>
+<!--      <div id="rightPane" class="roundedCorners shadow">
+      </div> -->
       <div id="footer" class="shadow roundedCorners">
-        <div id="notes"></div>
+        <div id="notes">Send e-mails to darcy at winterbiking dot ca</div>
       </div>
     </div>
     <script>
@@ -55,7 +55,6 @@
       var bikeJson = L.geoJson(bikeEdits, {
         onEachFeature: initBikeJson
       });
-//      drawnItems.addLayer(bikeJson);
 
       var drawControl = new L.Control.Draw({
         draw: {
@@ -72,7 +71,8 @@
       map.on('draw:created', function (e) {
         var type = e.layerType,
             layer = e.layer;
-        drawnItems.addLayer(layer);
+//        console.log(type);
+        initNewLayer(layer);
       });
     </script>
   </body>
