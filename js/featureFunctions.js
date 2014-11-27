@@ -161,7 +161,6 @@ function initNewLayer(layer) {
 function geolocateMe() {
   var pos = L.GeoIP.getPosition();
   map.panTo([pos.lat, pos.lng]);
-  map.setZoom(17);
 	geolocateMarker = new L.marker([pos.lat, pos.lng]).addTo(map);
 	geolocateMarker.bindPopup('You may be here').openPopup();
 }

@@ -160,15 +160,3 @@ font-size: xsmall;
   padding: 5px;
   border-radius: 10px;
 }
-
-#locateButtonDiv {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  z-index: 50;
-  font-family: "arial", "sans-serif";
-}
-
-.simpleGeocoder .esriGeocoder{
-  width: 90%
-}

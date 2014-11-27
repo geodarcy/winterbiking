@@ -6,7 +6,7 @@
     <title>Winter Biking</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.10.1/dijit/themes/claro/claro.css" />
+<!--    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.10.1/dijit/themes/claro/claro.css" /> -->
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <link rel="stylesheet" href="./css/winterbiking.css" />
     <link rel="stylesheet" href="./LeafletDraw/leaflet.draw.css" />
@@ -15,6 +15,7 @@
     <script src="./js/basemaps.js" type="text/javascript"></script>
     <script src="./js/leaflet-geoip.js" type="text/javascript"></script>
     <script src="./js/featureFunctions.js" type="text/javascript"></script>
+    <script src="./js/FunctionButton.js" type="text/javascript"></script>
     <script src="./data/winterbiking.js" type="text/javascript"></script>
 <!--    <script>dojoConfig = {parseOnLoad: true}</script>
     <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.1/dojo/dojo.js" data-dojo-config="async:true"></script>
@@ -25,9 +26,9 @@
       <div id="header" class="shadow roundedCorners">
         <div id="title">Winter Biking</div>
         <div id="subtitle">What are the conditions for your ride?</div>
-        <div id='locateButtonDiv'>
+<!--        <div id='locateButtonDiv'>
         	<button id='locateButton' onCLick='geolocateMe()'>Locate Me!</button>
-      	</div>
+      	</div> -->
       </div>
       <div id="map" class="roundedCorners shadow"></div>
 <!--      <div id="rightPane" class="roundedCorners shadow">
@@ -77,6 +78,10 @@
 //        console.log(type);
         initNewLayer(layer);
       });
+
+      var geolocateButton = L.functionButtons([{content: 'Locate Me!'}]);
+      geolocateButton.on('clicked', function(data) {geolocateMe()});
+      map.addControl(geolocateButton);
     </script>
   </body>
 </html>
