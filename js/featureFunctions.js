@@ -146,14 +146,22 @@ function fadeOldPoints (layer) {
 }
 
 function initNewLayer(layer) {
-  layerGeoJSON = layer.toGeoJSON()
+  var layerGeoJSON = layer.toGeoJSON()
   layerGeoJSON.properties.last_edited_date = new Date();
-  layerGeoJSONNewClass = L.geoJson(layerGeoJSON)
-  layerForDrawnItems = layerGeoJSONNewClass._layers[Object.keys(layerGeoJSONNewClass._layers)[0]]
+  var layerGeoJSONNewClass = L.geoJson(layerGeoJSON)
+  var layerForDrawnItems = layerGeoJSONNewClass._layers[Object.keys(layerGeoJSONNewClass._layers)[0]]
   var popupText = createPopup(layerForDrawnItems);
   layerForDrawnItems.bindPopup(popupText);
   currentLayer = layerForDrawnItems;
   drawnItems.addLayer(layerForDrawnItems);
   drawnItems._layers[Object.keys(drawnItems._layers)[Object.keys(drawnItems._layers).length - 1]].openPopup()
 //  console.log(layerGeoJSONNewClass._layers[Object.keys(layerGeoJSONNewClass._layers)[0]]);
+}
+
+function geolocateMe() {
+  var pos = L.GeoIP.getPosition();
+  map.panTo([pos.lat, pos.lng]);
+  map.setZoom(17);
+	geolocateMarker = new L.marker([pos.lat, pos.lng]).addTo(map);
+	geolocateMarker.bindPopup('You may be here').openPopup();
 }

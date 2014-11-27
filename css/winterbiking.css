@@ -152,43 +152,18 @@ font-size: xsmall;
   font-family: "arial", "sans-serif";
 }
 
-#HomeButton {
-  position: absolute;
-  top: 95px;
-  left: 20px;
-  z-index: 50;
-  font-family: "arial", "sans-serif";
-}
-
-#LocateButton {
-  position: absolute;
-  top: 135px;
-  left: 20px;
-  z-index: 50;
-  font-family: "arial", "sans-serif";
-}
-
-#BasemapToggle {
-  position: absolute;
-  top: 175px;
-  left: 20px;
-  z-index: 50;
-  font-family: "arial", "sans-serif";
-}
-
-#logo {
+#locateButton {
   vertical-align: middle;
-  height: 45px;
-  top: 0px;
+  height: 30px;
+  top: 5px;
   background-color: white;
   padding: 5px;
-  border-bottom-right-radius: 10px;
-  border-bottom-left-radius: 10px;
+  border-radius: 10px;
 }
 
-#logoDiv {
+#locateButtonDiv {
   position: absolute;
-  top: 0px;
+  top: 15px;
   right: 20px;
   z-index: 50;
   font-family: "arial", "sans-serif";
