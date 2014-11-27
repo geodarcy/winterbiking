@@ -35,10 +35,13 @@ function changeCreator(value) {
 function updateAllMarkers() {
   drawnItems.eachLayer(function(layer) {
     styleMarkers(layer);
+    if (layer.feature.geometry.type == "LineString")
+      fadeOldLines(layer);
+		if (layer.feature.geometry.type == "Point")
+			fadeOldPoints(layer);
     var popupText = createPopup(layer);
     layer.bindPopup(popupText);
   });
-
 }
 
 function createPopup(layer) {
@@ -132,7 +135,7 @@ function fadeOldPoints (layer) {
     var daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
   //  console.log(daysDiff);
     if (daysDiff <= 7)
-      layer.setOpacity(0.1);
+      layer.setOpacity(1);
     else if (daysDiff <= 14)
       layer.setOpacity(0.5);
     else if (daysDiff <= 21)
