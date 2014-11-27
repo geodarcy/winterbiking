@@ -41,7 +41,7 @@
       var map = L.map('map', {
         center: [53.53, -113.53],
         zoom: 13,
-        layers: [topo, imagery]
+        layers: [cartoDB, imagery, osm, stamenTonerLite]
       });
 
       L.control.layers(baseMaps, overlays).addTo(map);
