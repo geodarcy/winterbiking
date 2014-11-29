@@ -12,7 +12,25 @@ var hazardIcon = L.icon({
   popupAnchor: [-3, -15]
 });
 
-var currentLayer;
+var currentLayer, jsonData;
+
+function readData() {
+  try {
+		$.get("./data/winterbiking.geojson", function(data, status) {
+			bikeEdits = JSON.parse(data);
+			bikeJson = L.geoJson(bikeEdits, {
+				onEachFeature: initBikeJson
+			});
+		});
+	}
+	catch(err) {
+	  console.log("There are no data yet.");
+	}
+}
+
+function writeData() {
+  $.post("./php/writewbmysql.php", 'data='+jsonData, function(){drawnItems.clearLayers();readData();});
+}
 
 function changeCondition(value) {
   currentLayer.feature.properties.Condition = value;
@@ -42,6 +60,9 @@ function updateAllMarkers() {
     var popupText = createPopup(layer);
     layer.bindPopup(popupText);
   });
+  jsonData = JSON.stringify(drawnItems.toGeoJSON());
+//  console.log(jsonData);
+  writeData();
 }
 
 function createPopup(layer) {
