@@ -1,4 +1,3 @@
-<?php ?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -55,8 +54,7 @@
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
 
-//			readData();
-			<?php include './php/readwbmysql.php'; ?>
+			readData();
 
       var drawControl = new L.Control.Draw({
         draw: {

@@ -1,5 +1,10 @@
 <?php
-$data = $_POST['data'];
-echo $data;
-file_put_contents("./data/out.geojson", 'foo');
+	$f = fopen("../data/winterbiking.geojson", 'w');
+	if(flock($f, LOCK_EX)) {
+		$data = $_POST['data'];
+		fwrite($f, $data, 10000000);
+	} else {
+		echo "Could not lock file!";
+	}
+	fclose($f);
 ?>

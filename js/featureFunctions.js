@@ -28,8 +28,10 @@ function readData() {
 	}
 }
 
-function writeData() {
-  $.post("./php/writewbmysql.php", 'data='+jsonData, function(){drawnItems.clearLayers();readData();});
+function writeData(callbackFunction) {
+  jsonData = JSON.stringify(drawnItems.toGeoJSON());
+//  console.log(jsonData);
+  callbackFunction();
 }
 
 function changeCondition(value) {
@@ -62,7 +64,9 @@ function updateAllMarkers() {
   });
   jsonData = JSON.stringify(drawnItems.toGeoJSON());
 //  console.log(jsonData);
-  writeData();
+  writeData(function() {
+		$.post("./php/writewbjson.php", 'data='+jsonData, function(){drawnItems.clearLayers();readData();});
+	});
 }
 
 function createPopup(layer) {
