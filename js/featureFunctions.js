@@ -65,7 +65,7 @@ function updateAllMarkers() {
   jsonData = JSON.stringify(drawnItems.toGeoJSON());
 //  console.log(jsonData);
   writeData(function() {
-		$.post("./php/writewbjson.php", 'data='+jsonData, function(){drawnItems.clearLayers();readData();});
+		$.post("./php/writewbjson.php", 'data='+jsonData, function(){pass/*drawnItems.clearLayers();readData();*/});
 	});
 }
 
