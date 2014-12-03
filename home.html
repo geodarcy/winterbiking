@@ -71,8 +71,11 @@
       map.on('draw:created', function (e) {
         var type = e.layerType,
             layer = e.layer;
-//        console.log(type);
-        initNewLayer(layer);
+//        console.log(e);
+//        initNewLayer(layer);
+        action = "INSERT";
+        persistOnCartoDB(action, layer);
+        map.addLayer(layer);
       });
 
       var geolocateButton = L.functionButtons([{content: 'Locate Me!'}]);
