@@ -28,10 +28,9 @@ function readData() {
 	}
 }
 
-function writeData(callbackFunction) {
+function writeData() {
   jsonData = JSON.stringify(drawnItems.toGeoJSON());
-//  console.log(jsonData);
-  callbackFunction();
+  var foo = $.post("./php/writewbjson.php", {data:jsonData});
 }
 
 function changeCondition(value) {
@@ -63,10 +62,7 @@ function updateAllMarkers() {
     layer.bindPopup(popupText);
   });
   jsonData = JSON.stringify(drawnItems.toGeoJSON());
-//  console.log(jsonData);
-  writeData(function() {
-		$.post("./php/writewbjson.php", 'data='+jsonData, function(){pass/*drawnItems.clearLayers();readData();*/});
-	});
+  writeData();
 }
 
 function createPopup(layer) {
@@ -188,4 +184,9 @@ function geolocateMe() {
   map.panTo([pos.lat, pos.lng]);
 	geolocateMarker = new L.marker([pos.lat, pos.lng]).addTo(map);
 	geolocateMarker.bindPopup('You may be here').openPopup();
+}
+
+function deleteLayers(layer) {
+  drawnItems.removeLayer(layer);
+  writeData();
 }

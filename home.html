@@ -49,7 +49,7 @@
       L.control.layers(baseMaps, overlays).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
 
-      map.addLayer(stamenTonerLite);
+      map.addLayer(cartoDB);
 
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
@@ -73,6 +73,9 @@
             layer = e.layer;
 //        console.log(type);
         initNewLayer(layer);
+      });
+      map.on('draw:deleted', function (e) {
+        e.layers.eachLayer(deleteLayers);
       });
 
       var geolocateButton = L.functionButtons([{content: 'Locate Me!'}]);
