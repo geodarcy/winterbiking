@@ -121,7 +121,7 @@ function styleMarkers (layer) {
     if (layer.feature.geometry.type == "LineString" & layer.feature.properties.Condition == "Fair")
       layer.setStyle({color: "#f7f619"});
     if (layer.feature.geometry.type == "LineString" & layer.feature.properties.Condition == "Good")
-      layer.setStyle({color: "green"});
+      layer.setStyle({color: "#0F7001"});
     if (layer.feature.geometry.type == "Point" & layer.feature.properties.Condition == "Hazard")
       layer.setIcon(hazardIcon);
     if (layer.feature.geometry.type == "Point" & layer.feature.properties.Condition == "Caution")
