@@ -180,10 +180,19 @@ function initNewLayer(layer) {
 }
 
 function geolocateMe() {
-  var pos = L.GeoIP.getPosition();
-  map.panTo([pos.lat, pos.lng]);
-	geolocateMarker = new L.marker([pos.lat, pos.lng]).addTo(map);
+  if (geoPosition.init()) {
+    geoPosition.getCurrentPosition(geoSuccess, geoError);
+  }
+}
+
+function geoSuccess(p) {
+  map.panTo([p.coords.latitude, p.coords.longitude]);
+  geolocateMarker = new L.marker([p.coords.latitude, p.coords.longitude]).addTo(map);
 	geolocateMarker.bindPopup('You may be here').openPopup();
+}
+
+function geoError() {
+  alert("Sorry, couldn't find you!");
 }
 
 function deleteLayers(layer) {
