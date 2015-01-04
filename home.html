@@ -81,6 +81,20 @@
       var geolocateButton = L.functionButtons([{content: 'Locate Me!'}]);
       geolocateButton.on('clicked', function(data) {geolocateMe()});
       map.addControl(geolocateButton);
+
+      var legend = L.control({position: 'bottomright'});
+      legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend'),
+          labels = [];
+        labels.push('<i style="background:#0F7001"></i> Good');
+        labels.push('<i style="background:#f7f619"></i> Fair');
+        labels.push('<i style="background:#ff0000"></i> Poor');
+        labels.push('<img src="./icons/caution.png" height="18" width="18"> Caution');
+        labels.push('<img src="./icons/hazard.png" height="18" width="18"> Hazard');
+        div.innerHTML = labels.join('<br><br>');
+        return div;
+      };
+      legend.addTo(map);
     </script>
   </body>
 </html>
