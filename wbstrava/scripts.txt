@@ -1,0 +1,56 @@
+curl -G https://www.strava.com/api/v3/athlete -d access_token=d47099a29b2f3539e1c21af6d820e33a109a079e
+
+curl -G https://www.strava.com/api/v3/segments/1370251 -d access_token=d47099a29b2f3539e1c21af6d820e33a109a079e
+
+curl -G https://www.strava.com/api/v3/segments/1370251/leaderboard -d access_token=d47099a29b2f3539e1c21af6d820e33a109a079e -d per_page=100 > /Users/Darcy/Documents/github/wbstrava/segmentLeaderboard.json
+curl -G https://www.strava.com/api/v3/segments/1370251/leaderboard -d access_token=d47099a29b2f3539e1c21af6d820e33a109a079e -d per_page=10 -d date_range='this_week' > /Users/Darcy/Documents/github/wbstrava/segmentLeaderboardLastWeek.json
+
+curl -G https://www.strava.com/api/v3/segments/1370251/all_efforts -d access_token=d47099a29b2f3539e1c21af6d820e33a109a079e -d start_date_local=2015-03-19T00:00:00Z -d end_date_local=2015-04-20T23:59:59Z > /Users/Darcy/Documents/github/winterbiking/wbstrava/segmentEfforts.json
+
+with open("/Users/Darcy/Documents/github/winterbiking/wbstrava/segmentEfforts.json") as json_file:
+	json_data = json.load(json_file)
+allEfforts = [x['moving_time'] for x in json_data]
+
+with open("/Users/Darcy/Documents/github/wbstrava/segmentLeaderboardLastWeek.json") as json_filelw:
+	json_datalw = json.load(json_filelw)
+recentEfforts = [x['moving_time'] for x in json_datalw['entries']]
+
+## start python get segments
+import numpy as np
+from stravalib.client import Client
+import datetime
+
+client = Client()
+client.access_token = 'd47099a29b2f3539e1c21af6d820e33a109a079e'
+
+mySegments = [x.id for x in client.get_starred_segment()]
+
+now = datetime.datetime.now()
+weekAgo = now + datetime.timedelta(days=-7)
+monthAgo = now + datetime.timedelta(days=-30)
+weekEfforts = client.get_segment_efforts(1370251, start_date_local=weekAgo, end_date_local=now)
+weekEffortsTimes = [i.moving_time.seconds for i in weekEfforts]
+monthEfforts = client.get_segment_efforts(1370251, start_date_local=monthAgo, end_date_local=now)
+monthEffortsTimes = [i.moving_time.seconds for i in monthEfforts]
+if len(weekEffortsTimes) and len(monthEffortsTimes):
+  segmentMean = np.divide(np.mean(weekEffortsTimes), np.mean(monthEffortsTimes))
+else:
+  segmentMean = 0
+print("Number of efforts this week: {}\nNumber of efforts this month: {}\nSegment mean: {}".format(len(weekEffortsTimes), len(monthEffortsTimes), segmentMean))
+
+
+##  retrieve a segment and make a list of coordinate tuples then write to CartoDB
+from stravalib.client import Client
+from polyline.codec import PolylineCodec
+from cartodb import CartoDBAPIKey, CartoDBException
+
+client = Client()
+client.access_token = 'd47099a29b2f3539e1c21af6d820e33a109a079e'
+
+API_KEY ='cad54ea0c580a0c554b9e9562157e7c9bd9f37b0'
+cartodb_domain = 'geodarcy'
+cl = CartoDBAPIKey(API_KEY, cartodb_domain)
+
+segmentGeojson = PolylineCodec().decode(client.get_segment(1370251).map.polyline)
+
+cl.sql('select * from winterbiking', format='geojson')

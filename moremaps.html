@@ -21,10 +21,29 @@
     <div id="wrapper">
       <div id="header" class="shadow roundedCorners">
         <div id="title">Winter Biking</div>
-        <div id="subtitle">What are the conditions for your ride?</div>
+        <div id="subtitle">More maps I've done which may or may not involve winter or biking.</div>
+        <a href="./about.html" target="_blank"><div id="aboutBox">About</div></a>
+        <a href="./home.html" target="_blank"><div id="moreMapsBox">Home</div></a>
       </div>
       <div id="map">
-      	<p>Here's a list of more maps I've made recently.</p>
+        <table>
+          <tr>
+            <td>
+              <a href='./wbstrava/wbstrava.html' target="_blank"><img src="./images/wbstravathumbnail.png" alt="Winter Biking" height="299" width="313"></a>
+            </td>
+            <td>
+              <p id="subtitle"><strong>Strava Winter Biking</strong>. This map attempts to use <a href="http://www.strava.com" target="_blank">Strava</a> segment data to show biking conditions.</p>
+              <p id="subtitle">The theory is that cyclists will travel slower when conditions are not favourable and, by comparing recent times to historical times, cycling conditions can be approximated. A Python script is run to search for Strava segments and add them to a <a href="http://www.cartodb.com" target="_blank">CartoDB</a> database. A second Python script can then be run periodically to collect all segment efforts over a recent time span and the current leaderboard for that segment.</p>
+              <p id="subtitle">There are some shortcomings though. To see the conditions for a particular segment, it must have been added to the database. Segment suggestions can be sent to the e-mail below. The data also require timely updates. This means both that people must ride the segments and upload the data to Strava and that the Python script to update the segment times must be run frequently. There will also be a response lag in the data due to extreme weather events. Currently, "recent" segment efforts means the last seven days. Some experimenting will be done with this time window as too long means the data will not respond to weather events quickly but too short will likely mean no data as segment efforts will quickly become outdated.</p>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <p id="notes">Questions? Comments? Send e-mails <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#x64;&#97;&#114;&#x63;&#121;&#x40;&#x77;&#x69;&#x6e;&#x74;&#x65;&#114;&#x62;&#x69;&#107;&#x69;&#110;&#x67;&#46;&#99;&#x61;">here</a></p>
+            </td>
+          </tr>
+        </table>
       </div>
   </body>
 </html>

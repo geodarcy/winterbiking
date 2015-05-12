@@ -148,13 +148,15 @@
   right: 0px;
   bottom: 0px;
   width: 80px;
+  height: 55px;
   border:solid 2px #B8B8B8;
   margin:5px;
   font-family: "helvetica", "sans-serif";
   background: -webkit-gradient(linear, left top, left bottom, from(#E9F4FF), to(#8AB8E6));
   background: -moz-linear-gradient(top,  #E9F4FF,  #8AB8E6);
+  display: table-cell;
   text-align: center;
-  line-height: 60px;
+  vertical-align: middle;
   font-size: 0.9em;
 }
 
@@ -165,13 +167,14 @@
   right: 90px;
   bottom: 0px;
   width: 80px;
+  height: 55px;
   border:solid 2px #B8B8B8;
   margin:5px;
   font-family: "helvetica", "sans-serif";
   background: -webkit-gradient(linear, left top, left bottom, from(#E9F4FF), to(#8AB8E6));
   background: -moz-linear-gradient(top,  #E9F4FF,  #8AB8E6);
+  display: table-cell;
   text-align: center;
-  line-height: 60px;
+  vertical-align: middle;
   font-size: 0.9em;
-  word-wrap: break-word;
 }
