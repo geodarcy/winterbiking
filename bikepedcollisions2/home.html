@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Strava Winter Biking</title>
+    <title>Biking and Pedestrian Collisions</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
@@ -11,13 +11,14 @@
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet-src.js"></script>
     <script src="../js/basemaps.js" type="text/javascript"></script>
     <script src="../js/L.Control.Locate.min.js" type="text/javascript"></script>
+    <script src="./js/leaflet-heatmap.js" type="text/javascript"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   </head>
   <body>
     <div id="wrapper">
       <div id="header" class="shadow roundedCorners">
-        <div id="title">Winter Biking</div>
-        <div id="subtitle">Comparing last week's Strava efforts to the top 100 on each segment's leaderboard.</div>
+        <div id="title">Biking and Pedestrian Collisions</div>
+        <div id="subtitle">Visualizing collisions involving bikes or pedestrians from 2005 to 2014.</div>
         <a href="../about.html" target="_blank"><div id="aboutBox">About this site</div></a>
         <a href="../moremaps.html" target="_blank"><div id="moreMapsBox">About this map</div></a>
       </div>
@@ -31,27 +32,41 @@
     <script>
       var map = L.map('map', {
         center: [53.53, -113.53],
-        zoom: 13
+        zoom: 13,
+        maxZoom: 20
       });
       var bikeJson;
-      var url = "https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM wbstrava";
+      var cfg = {
+        "radius": 2,
+        "maxOpacity": 0.8,
+        "scaleRadius": true,
+        "useLocalExtrema": true,
+//        latField: 'latitude',
+//        lngField: 'longitude',
+        valueField: 'allsum'
+      };
+      var heatmapLayer = new HeatmapOverlay(cfg);
+      var url = "https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM vulnerableusercollisionseditgeocoded";
 			$.getJSON(url, function(data) {
 				bikeJson = L.geoJson(data, {
 					onEachFeature: function (feature, layer) {
-					  styleLayer(layer);
-						layer.cartodb_id=feature.properties.cartodb_id;
-						layer.bindPopup("This week's efforts are " + Math.round(feature.properties['ratio']*1000)/10 + "% of the top 100.");
+						layer.bindPopup(feature.properties['collision_location_name'] + "<br/>" +
+						                feature.properties['roadway_portion'] + "<br/>Total collisions involving bikes: " +
+						                feature.properties['bikesum'] + "<br/>Total collisions involving pedestrians: " +
+						                feature.properties['pedsum'] + "<br/>Total collisions: " +
+						                feature.properties['allsum']);
 					}
 				});
-			  bikeJson.addTo(map);
+				heatmapLayer.setData(bikeJson);
 			});
 
       L.control.layers(baseMaps).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
       var locateControl = L.control.locate({position: 'topright', locateOptions: {maxZoom: 14}}).addTo(map);
       map.addLayer(cartoDB);
+      map.addLayer(heatmapLayer);
 
-			function styleLayer(layer) {
+/*			function styleLayer(layer) {
 				layer.setStyle({weight: 3});
 				if (layer.feature.properties['ratio'] >= 0.80)
 				  layer.setStyle({opacity: 0.9, color: '#1a9641'});
@@ -81,7 +96,7 @@
         div.innerHTML = labels.join('<br><br>');
         return div;
       };
-      legend.addTo(map);
+      legend.addTo(map); */
     </script>
   </body>
 </html>
