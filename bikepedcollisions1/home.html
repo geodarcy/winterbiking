@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/winterbiking.css" />
+    <link rel="stylesheet" href="./css/winterbiking.css" />
     <link rel="stylesheet" href="../css/L.Control.Locate.min.css" />
     <link rel="stylesheet" href="http://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="http://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" />
@@ -21,17 +21,36 @@
     <div id="wrapper">
       <div id="header" class="shadow roundedCorners">
         <div id="title">Biking and Pedestrian Collisions</div>
-        <div id="subtitle">Visualizing collisions involving bikes or pedestrians from 2005 to 2014.</div>
+        <div id="subtitle">Visualizing traffic incidents involving bikes or pedestrians from 2005 to 2014.</div>
         <a href="../about.html" target="_blank"><div id="aboutBox">About this site</div></a>
         <a href="../moremaps.html" target="_blank"><div id="moreMapsBox">About this map</div></a>
       </div>
       <div id="map" class="roundedCorners shadow"></div>
-<!--      <div id="rightPane" class="roundedCorners shadow">
+      <div id="rightPane" class="roundedCorners shadow">Filter travel mode
+        <select id="modeMenu" onchange="filterData();">
+          <option value="all">Show all</option>
+          <option value="Bike">Biking incidents</option>
+          <option value="Ped">Pedestrian incidents</option>
+        </select>
+        </br><hr>
+        Filter incident year
+        <form>
+          <input type="checkbox" name="checkYear" value="2005" onchange="filterData();" checked>2005</option></br>
+          <input type="checkbox" name="checkYear" value="2006" onchange="filterData();" checked>2006</option></br>
+          <input type="checkbox" name="checkYear" value="2007" onchange="filterData();" checked>2007</option></br>
+          <input type="checkbox" name="checkYear" value="2008" onchange="filterData();" checked>2008</option></br>
+          <input type="checkbox" name="checkYear" value="2009" onchange="filterData();" checked>2009</option></br>
+          <input type="checkbox" name="checkYear" value="2010" onchange="filterData();" checked>2010</option></br>
+          <input type="checkbox" name="checkYear" value="2011" onchange="filterData();" checked>2011</option></br>
+          <input type="checkbox" name="checkYear" value="2012" onchange="filterData();" checked>2012</option></br>
+          <input type="checkbox" name="checkYear" value="2013" onchange="filterData();" checked>2013</option></br>
+          <input type="checkbox" name="checkYear" value="2014" onchange="filterData();" checked>2014</option></br>
+        </form>
       </div>
       <div id="footer" class="shadow roundedCorners">
         <div id="notes">Questions? Comments? Send e-mails <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#x64;&#97;&#114;&#x63;&#121;&#x40;&#x77;&#x69;&#x6e;&#x74;&#x65;&#114;&#x62;&#x69;&#107;&#x69;&#110;&#x67;&#46;&#99;&#x61;">here</a></div>
       </div>
-    </div> -->
+    </div>
     <script>
       var map = L.map('map', {
         center: [53.53, -113.53],
@@ -39,11 +58,11 @@
         maxZoom: 20
       });
 			var markers = new L.MarkerClusterGroup();
-			var allJSON = {};
+			var layerDict = {};
 			loadAllData();
 			map.addLayer(markers);
 
-      var overlays = {"Accident Data": markers};
+      var overlays = {"Collision data": markers};
       L.control.layers(baseMaps, overlays).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
       var locateControl = L.control.locate({position: 'topright', locateOptions: {maxZoom: 14}}).addTo(map);
