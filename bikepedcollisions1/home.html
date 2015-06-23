@@ -57,48 +57,35 @@
         zoom: 11,
         maxZoom: 20
       });
+      map.addLayer(cartoDB);
 			var markers = new L.MarkerClusterGroup();
+			var statsCan = new L.layerGroup();
 			var layerDict = {};
+			loadStatsCan();
+			map.addLayer(statsCan);
 			loadAllData();
 			map.addLayer(markers);
 
-      var overlays = {"Collision data": markers};
+      var overlays = {"Collision data": markers, "Statistics Canada bike/walk commute": statsCan};
       L.control.layers(baseMaps, overlays).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
       var locateControl = L.control.locate({position: 'topright', locateOptions: {maxZoom: 14}}).addTo(map);
-      map.addLayer(cartoDB);
-
-/*			function styleLayer(layer) {
-				layer.setStyle({weight: 3});
-				if (layer.feature.properties['ratio'] >= 0.80)
-				  layer.setStyle({opacity: 0.9, color: '#1a9641'});
-				else if (layer.feature.properties['ratio'] >= 0.60)
-				  layer.setStyle({opacity: 0.9, color: '#a6d96a'});
-				else if (layer.feature.properties['ratio'] >= 0.40)
-				  layer.setStyle({opacity: 0.9, color: '#ffffbf'});
-				else if (layer.feature.properties['ratio'] >= 0.2)
-				  layer.setStyle({opacity: 0.9, color: '#fdae61'});
-				else if (layer.feature.properties['ratio'] > 0)
-					layer.setStyle({opacity: 0.9, color: '#d7191c'});
-				else
-					layer.setStyle({opacity: 0.5, color: '#777777'});
-      }
 
       var legend = L.control({position: 'bottomright'});
       legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend'),
           labels = [];
-        labels.push('Last week\'s efforts as a percentage of the all-time top 100');
-        labels.push('<i style="background:#1a9641"></i> > 80%');
-        labels.push('<i style="background:#a6d96a"></i> 60% - 80%');
-        labels.push('<i style="background:#ffffbf"></i> 40% - 60%');
-        labels.push('<i style="background:#fdae61"></i> 20% - 40%');
-        labels.push('<i style="background:#d7191c"></i> < 20%');
-        labels.push('<i style="background:#777777"></i> No recent data');
+        labels.push('Percentage of people who commute by bike or walking');
+        labels.push('<i style="background:#810f7c"></i> > 20%');
+        labels.push('<i style="background:#8856a7"></i> 15% - 20%');
+        labels.push('<i style="background:#8c96c6"></i> 10% - 15%');
+        labels.push('<i style="background:#b3cde3"></i> 5% - 10%');
+        labels.push('<i style="background:#edf8fb"></i> < 5%');
+        labels.push('<i style="background:#C8C8C8"></i> No data');
         div.innerHTML = labels.join('<br><br>');
         return div;
       };
-      legend.addTo(map); */
+      legend.addTo(map);
     </script>
   </body>
 </html>

@@ -60,3 +60,37 @@ function filterData()
     }
   }
 }
+
+function getStatsCanColour(d)
+{
+  return d > 0.2 ? '#810f7c' :
+         d > 0.15 ? '#8856a7' :
+         d > 0.1 ? '#8c96c6' :
+         d > 0.05 ? '#b3cde3' :
+         d > 0 ? '#edf8fb' :
+         '#C8C8C8';
+}
+
+function colourStatsCan(feature) {
+  return {
+    fillColor: getStatsCanColour(feature.properties.BikePedPct),
+    weight: 2,
+    opacity: 0.8,
+    color: '#C8C8C8',
+    fillOpacity: 0.5
+  };
+}
+
+function loadStatsCan()
+{
+  var url = './geojson/EdmontonCensusTracts.geojson';
+  $.getJSON(url, function(data) {
+    var json = L.geoJson(data, {
+      onEachFeature: function (feature, layer) {
+        layer.bindPopup("Per cent of people who bike or walk to work: " + String(Math.round(feature.properties['BikePedPct']*1000)/10) + "%");
+      },
+      style: colourStatsCan
+    });
+    statsCan.addLayer(json);
+  });
+}
