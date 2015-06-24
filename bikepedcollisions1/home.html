@@ -60,13 +60,18 @@
       map.addLayer(cartoDB);
 			var markers = new L.MarkerClusterGroup();
 			var statsCan = new L.layerGroup();
+			var edmCensus = new L.layerGroup();
 			var layerDict = {};
 			loadStatsCan();
 			map.addLayer(statsCan);
+			loadEdmCensus();
+//			map.addLayer(edmCensus);
 			loadAllData();
 			map.addLayer(markers);
 
-      var overlays = {"Collision data": markers, "Statistics Canada bike/walk commute": statsCan};
+      var overlays = {"Collision data": markers,
+                      "Statistics Canada bike/walk commute": statsCan,
+                      "Edmonton census bike/walk commute": edmCensus};
       L.control.layers(baseMaps, overlays).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
       var locateControl = L.control.locate({position: 'topright', locateOptions: {maxZoom: 14}}).addTo(map);

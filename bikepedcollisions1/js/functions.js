@@ -83,7 +83,7 @@ function colourStatsCan(feature) {
 
 function loadStatsCan()
 {
-  var url = './geojson/EdmontonCensusTracts.geojson';
+  var url = './geojson/StatsCanCensusTracts.geojson';
   $.getJSON(url, function(data) {
     var json = L.geoJson(data, {
       onEachFeature: function (feature, layer) {
@@ -92,5 +92,19 @@ function loadStatsCan()
       style: colourStatsCan
     });
     statsCan.addLayer(json);
+  });
+}
+
+function loadEdmCensus()
+{
+  var url = './geojson/EdmontonCensus.geojson';
+  $.getJSON(url, function(data) {
+    var json = L.geoJson(data, {
+      onEachFeature: function (feature, layer) {
+        layer.bindPopup("Per cent of people who bike or walk to work: " + String(Math.round(feature.properties['BikePedPct']*1000)/10) + "%");
+      },
+      style: colourStatsCan
+    });
+    edmCensus.addLayer(json);
   });
 }
