@@ -10,18 +10,18 @@ function loadAllData()
     className: 'ped-div-icon'
   });
 
-  var url = './geojson/CollisionData.geojson';
+  var url = 'https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM extendedcollisiondata';
   $.getJSON(url, function(data) {
     var myJson = L.geoJson(data, {
       onEachFeature: function (feature, layer) {
-        var modeYear = feature.properties['Mode'] + feature.properties['Year'];
-        var popupText = feature.properties['Collision Location Name'];
-        popupText += "<br/><strong>Roadway Portion:</strong> " + feature.properties['Roadway Portion'];
-        popupText += "<br/><strong>Year:</strong> " + feature.properties['Year'];
-        popupText += "<br/><strong>Mode:</strong> " + feature.properties['Mode'];
-        popupText += "<br/><strong>Count:</strong> " + feature.properties['Count'];
+        var modeYear = feature.properties['mode'] + feature.properties['year'];
+        var popupText = feature.properties['collision_location_name'];
+        popupText += "<br/><strong>Roadway Portion:</strong> " + feature.properties['roadway_portion'];
+        popupText += "<br/><strong>Year:</strong> " + feature.properties['year'];
+        popupText += "<br/><strong>Mode:</strong> " + feature.properties['mode'];
+//        popupText += "<br/><strong>Count:</strong> " + feature.properties['Count'];
         layer.bindPopup(popupText);
-        if(feature.properties['Mode'] == 'Bike')
+        if(feature.properties['mode'] == 'Bike')
         {
           layer.setIcon(bikeIcon);
         }
