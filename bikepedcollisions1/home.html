@@ -58,7 +58,7 @@
         maxZoom: 20
       });
       map.addLayer(cartoDB);
-			var markers = new L.MarkerClusterGroup();
+			var markers = new L.MarkerClusterGroup({maxClusterRadius:20});
 			var statsCan = new L.layerGroup();
 			var edmCensus = new L.layerGroup();
 			var layerDict = {};

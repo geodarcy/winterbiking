@@ -67,7 +67,7 @@ function getStatsCanColour(d)
          d > 0.15 ? '#8856a7' :
          d > 0.1 ? '#8c96c6' :
          d > 0.05 ? '#b3cde3' :
-         d > 0 ? '#edf8fb' :
+         d >= 0 ? '#edf8fb' :
          '#C8C8C8';
 }
 
