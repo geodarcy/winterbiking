@@ -32,7 +32,7 @@ function loadAllData()
         if (! layerDict[modeYear])
           layerDict[modeYear] = [layer];
         else
-        layerDict[modeYear].push(layer);
+          layerDict[modeYear].push(layer);
         markers.addLayer(layer);
       }
     });
@@ -59,6 +59,21 @@ function filterData()
       markers.addLayers(layerDict[modes[i] + years[j]]);
     }
   }
+}
+
+function toggleChecks()
+{
+  if (document.getElementById('checkToggle').checked)
+  {
+    for (i=0; i<document.getElementsByName('checkYear').length; i++)
+      document.getElementsByName('checkYear')[i].checked = true;
+  }
+  else
+  {
+    for (i=0; i<document.getElementsByName('checkYear').length; i++)
+      document.getElementsByName('checkYear')[i].checked = false;
+  }
+  filterData();
 }
 
 function getStatsCanColour(d)
