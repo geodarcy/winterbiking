@@ -40,6 +40,7 @@ function loadAllData()
         markers.addLayer(layer);
       }
     });
+    getIncidentCount();
   });
 }
 
@@ -63,6 +64,7 @@ function filterData()
       markers.addLayers(layerDict[modes[i] + years[j]]);
     }
   }
+  getIncidentCount();
 }
 
 function toggleChecks()
@@ -126,4 +128,15 @@ function loadEdmCensus()
     });
     edmCensus.addLayer(json);
   });
+}
+
+function getIncidentCount()
+{
+  var mapBounds = map.getBounds();
+  var count = 0;
+  markers.eachLayer(function(marker) {
+    if(mapBounds.contains(marker.getLatLng()))
+      count++;
+  });
+  document.getElementById('incidentCount').innerHTML = "<strong>Number of incidents in the current map view:</strong> " + count.toString();
 }

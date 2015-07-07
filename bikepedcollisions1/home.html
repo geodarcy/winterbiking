@@ -33,7 +33,7 @@
           <option value="Ped">Pedestrian incidents</option>
         </select>
         </br><hr>
-        Filter incident year
+        <strong>Filter incident year</strong>
         <form>
           <input type="checkbox" name="checkYear" value="2005" onchange="filterData();" checked>2005</option></br>
           <input type="checkbox" name="checkYear" value="2006" onchange="filterData();" checked>2006</option></br>
@@ -47,6 +47,8 @@
           <input type="checkbox" name="checkYear" value="2014" onchange="filterData();" checked>2014</option></br>
           <input type="checkbox" id="checkToggle" value="all" onchange="toggleChecks();" checked>Check/uncheck all</option></br>
         </form>
+        <hr>
+        <div id='incidentCount'><strong>Number of incidents in the current map view:</strong></div>
       </div>
       <div id="footer" class="shadow roundedCorners">
         <div id="notes">Questions? Comments? Send e-mails <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#x64;&#97;&#114;&#x63;&#121;&#x40;&#x77;&#x69;&#x6e;&#x74;&#x65;&#114;&#x62;&#x69;&#107;&#x69;&#110;&#x67;&#46;&#99;&#x61;">here</a>.</div>
@@ -69,6 +71,8 @@
 //			map.addLayer(edmCensus);
 			loadAllData();
 			map.addLayer(markers);
+			map.on('viewreset', function() {getIncidentCount()});
+			map.on('moveend', function() {getIncidentCount()});
 
       var overlays = {"Collision data": markers,
                       "Statistics Canada bike/walk commute": statsCan,
