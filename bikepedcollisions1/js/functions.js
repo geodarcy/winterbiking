@@ -15,10 +15,14 @@ function loadAllData()
     var myJson = L.geoJson(data, {
       onEachFeature: function (feature, layer) {
         var modeYear = feature.properties['mode'] + feature.properties['year'];
+        var location = feature.properties['collision_location_name'].replace('&', '%26');
+        var portion = feature.properties['roadway_portion'];
         var popupText = feature.properties['collision_location_name'];
         popupText += "<br/><strong>Roadway Portion:</strong> " + feature.properties['roadway_portion'];
         popupText += "<br/><strong>Year:</strong> " + feature.properties['year'];
         popupText += "<br/><strong>Mode:</strong> " + feature.properties['mode'];
+        popupText += "<br/><br/>Is this point <a href='&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#x64;&#97;&#114;&#x63;&#121;&#x40;&#x77;&#x69;&#x6e;&#x74;&#x65;&#114;&#x62;&#x69;&#107;&#x69;&#110;&#x67;&#46;&#99;&#x61;?Subject=Vulnerable%20User%20Collision%20Map%20location%20error&body=" + location + "%0D" + portion + "'>misplaced</a>?"
+
 //        popupText += "<br/><strong>Count:</strong> " + feature.properties['Count'];
         layer.bindPopup(popupText);
         if(feature.properties['mode'] == 'Bike')
