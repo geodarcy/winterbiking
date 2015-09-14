@@ -22,18 +22,22 @@
       <div id="header" class="shadow roundedCorners">
         <div id="title">Winter Biking</div>
         <div id="subtitle">More maps I've done which may or may not involve winter or biking.</div>
-        <a href="./about.html" target="_blank"><div id="aboutBox">About</div></a>
-        <a href="./home.html" target="_blank"><div id="moreMapsBox">Home</div></a>
+        <a href="./about.html"><div id="aboutBox">About</div></a>
+        <a href="./home.html"><div id="moreMapsBox">Home</div></a>
       </div>
       <div id="map">
         <table>
           <tr>
+            <td><a href="http://ecmaps.ca/atlas.html" target="_blank"><img src="./images/ecmapatlas.png" alt="ECMap" height="299" width="313 "></a></td>
+            <td><p id="subtitle"><strong>ECMap LiveAtlas</strong>. These interactive maps show Early Development Instrument (EDI) results, socio-economic data and information on community resources for communities and subcommunities in Alberta. The maps also show administrative boundaries for the province. Please note that LiveAtlas works best in Chrome, Firefox and Safari.</br></br>I worked at ECMap as a Mapping Analyst from September 2010 until March 2015, when the project was closed due to a lack of funding from the provincial government. I wrote the LiveAtlas originally using esri's Javascript API but I rewrote it using Leaflet so that it would be much less expensive to maintain after ECMap closed.</p></td>
+          </tr>
+          <tr>
             <td>
-              <a href='./wbstrava/wbstrava.html' target="_blank"><img src="./images/wbstravathumbnail.png" alt="Winter Biking" height="299" width="313"></a>
+              <a href='./wbstrava/wbstrava.html'><img src="./images/wbstravathumbnail.png" alt="Winter Biking" height="299" width="313"></a>
             </td>
             <td>
-              <p id="subtitle"><strong>Strava Winter Biking</strong>. This map attempts to use <a href="http://www.strava.com" target="_blank">Strava</a> segment data to show biking conditions.</p>
-              <p id="subtitle">The theory is that cyclists will travel slower when conditions are not favourable and, by comparing recent times to historical times, cycling conditions can be approximated. A Python script is run to search for Strava segments and add them to a <a href="http://www.cartodb.com" target="_blank">CartoDB</a> database. A second Python script can then be run periodically to collect all segment efforts over a recent time span and the current leaderboard for that segment.</p>
+              <p id="subtitle"><strong>Strava Winter Biking</strong>. This map attempts to use <a href="http://www.strava.com">Strava</a> segment data to show biking conditions.</p>
+              <p id="subtitle">The theory is that cyclists will travel slower when conditions are not favourable and, by comparing recent times to historical times, cycling conditions can be approximated. A Python script is run to search for Strava segments and add them to a <a href="http://www.cartodb.com">CartoDB</a> database. A second Python script can then be run periodically to collect all segment efforts over a recent time span and the current leaderboard for that segment.</p>
               <p id="subtitle">There are some shortcomings though. To see the conditions for a particular segment, it must have been added to the database. Segment suggestions can be sent to the e-mail below. The data also require timely updates. This means both that people must ride the segments and upload the data to Strava and that the Python script to update the segment times must be run frequently. There will also be a response lag in the data due to extreme weather events. Currently, "recent" segment efforts means the last seven days. Some experimenting will be done with this time window as too long means the data will not respond to weather events quickly but too short will likely mean no data as segment efforts will quickly become outdated.</p>
             </td>
           </tr>
