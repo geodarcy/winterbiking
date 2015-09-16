@@ -15,10 +15,10 @@ var hazardIcon = L.icon({
 var currentLayer, jsonData;
 
 function readData() {
+  var url = 'https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM winterbiking WHERE the_geom IS NOT null';
   try {
-		$.get("./data/winterbiking.geojson", function(data, status) {
-			bikeEdits = JSON.parse(data);
-			bikeJson = L.geoJson(bikeEdits, {
+		$.getJSON(url, function(data) {
+			var bikeJson = L.geoJson(data, {
 				onEachFeature: initBikeJson
 			});
 		});
@@ -28,72 +28,93 @@ function readData() {
 	}
 }
 
-function writeData() {
-  jsonData = JSON.stringify(drawnItems.toGeoJSON());
-  var foo = $.post("./php/writewbjson.php", {data:jsonData});
+function insertNewLayer(layer) {
+  var insertGeoJSON = layer.toGeoJSON();
+  var q = 'INSERT INTO winterbiking (the_geom) VALUES (ST_SetSRID(ST_AsText(ST_GeomFromGeoJSON(\'' + JSON.stringify(insertGeoJSON.geometry) + '\')),4326)) RETURNING cartodb_id';
+  $.post("./php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
+  }, function(data) {
+    var foo = JSON.parse(data);
+//    console.log(insertGeoJSON);
+    insertGeoJSON.properties.cartodb_id = foo["rows"][0]["cartodb_id"];
+    insertGeoJSON.properties.updated_at = new Date();
+    L.geoJson(insertGeoJSON, {
+      onEachFeature: initBikeJson
+    });
+  });
 }
 
-function changeCondition(value) {
-  currentLayer.feature.properties.Condition = value;
-  currentLayer.feature.properties.last_edited_date = new Date();
-  updateAllMarkers();
+function changecondition(value) {
+  currentLayer.feature.properties.condition = value;
+  currentLayer.feature.properties.updated_at = new Date();
+  var q = "UPDATE winterbiking SET condition = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id
+  $.post("./php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
+  });
+  styleMarkers(currentLayer);
+  var popupText = createPopup(currentLayer);
+  currentLayer.bindPopup(popupText);
 }
 
-function changeComment(value) {
-  currentLayer.feature.properties.Comment = value;
-  currentLayer.feature.properties.last_edited_date = new Date();
-  updateAllMarkers();
+function changecomment(value) {
+  currentLayer.feature.properties.comment = value;
+  currentLayer.feature.properties.updated_at = new Date();
+  var q = "UPDATE winterbiking SET comment = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id
+  $.post("./php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
+  });
+  var popupText = createPopup(currentLayer);
+  currentLayer.bindPopup(popupText);
 }
 
 function changeCreator(value) {
-  currentLayer.feature.properties.created_user = value;
-  currentLayer.feature.properties.last_edited_date = new Date();
-  updateAllMarkers();
-}
-
-function updateAllMarkers() {
-  drawnItems.eachLayer(function(layer) {
-    styleMarkers(layer);
-    if (layer.feature.geometry.type == "LineString")
-      fadeOldLines(layer);
-		if (layer.feature.geometry.type == "Point")
-			fadeOldPoints(layer);
-    var popupText = createPopup(layer);
-    layer.bindPopup(popupText);
+  currentLayer.feature.properties.creator = value;
+  currentLayer.feature.properties.updated_at = new Date();
+  var q = "UPDATE winterbiking SET creator = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id
+  $.post("./php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
   });
-  jsonData = JSON.stringify(drawnItems.toGeoJSON());
-  writeData();
+  var popupText = createPopup(currentLayer);
+  currentLayer.bindPopup(popupText);
 }
 
 function createPopup(layer) {
   var myLayer = layer;
-  var popupText = "Condition: <select id='condition' onchange='changeCondition(this.value)'>";
-  if (!layer.feature.properties.Condition)
+  var popupText = "condition: <select id='condition' onchange='changecondition(this.value)'>";
+  if (!layer.feature.properties.condition)
     popupText += "<option disabled selected='selected'>Select a riding condition</option><option";
   else
     popupText += "<option";
   if (layer.feature.geometry.type == "LineString") {
-    if (layer.feature.properties.Condition == 'Good')
+    if (layer.feature.properties.condition == 'Good')
       popupText += " selected='selected' ";
     popupText += ">Good</option><option";
-    if (layer.feature.properties.Condition == 'Fair')
+    if (layer.feature.properties.condition == 'Fair')
       popupText += " selected='selected' ";
     popupText += ">Fair</option><option";
-    if (layer.feature.properties.Condition == 'Poor')
+    if (layer.feature.properties.condition == 'Poor')
       popupText += " selected='selected' ";
     popupText += ">Poor</option></select></br>";
   }
   if (layer.feature.geometry.type == "Point") {
-    if (layer.feature.properties.Condition == 'Caution')
+    if (layer.feature.properties.condition == 'Caution')
       popupText += " selected='selected' ";
     popupText += ">Caution</option><option";
-    if (layer.feature.properties.Condition == 'Hazard')
+    if (layer.feature.properties.condition == 'Hazard')
       popupText += " selected='selected' ";
     popupText += ">Hazard</option></select></br>";
   }
-  popupText += "Comment: <textarea onchange='changeComment(this.value)' tabindex='1'>" + layer.feature.properties.Comment + "</textarea><br>";
-  popupText += "Created By: <textarea onchange='changeCreator(this.value)' tabindex='2'>" + layer.feature.properties.created_user + "</textarea><br>";
-  popupText += "Created On: <b>" + layer.feature.properties.last_edited_date.toDateString() + "</b>";
+  popupText += "comment: <textarea onchange='changecomment(this.value)' tabindex='1'>" + layer.feature.properties.comment + "</textarea><br>";
+  popupText += "Created By: <textarea onchange='changeCreator(this.value)' tabindex='2'>" + layer.feature.properties.creator + "</textarea><br>";
+  popupText += "Created On: <b>" + layer.feature.properties.updated_at.toDateString() + "</b>";
   return popupText;
 }
 
@@ -101,7 +122,7 @@ function initBikeJson (feature, layer) {
   var tempLayer = layer;
   tempLayer.feature = layer.feature;
 //  console.log(tempLayer);
-  tempLayer.feature.properties.last_edited_date = new Date(tempLayer.feature.properties.last_edited_date);
+  tempLayer.feature.properties.updated_at = new Date(tempLayer.feature.properties.updated_at);
   var popupText = createPopup(tempLayer);
   tempLayer.bindPopup(popupText);
   tempLayer.on('popupopen', function(){currentLayer = tempLayer;});
@@ -116,15 +137,15 @@ function initBikeJson (feature, layer) {
 function styleMarkers (layer) {
 //  console.log(layer);
   if (layer.feature) {
-    if (layer.feature.geometry.type == "LineString" & layer.feature.properties.Condition == "Poor")
+    if (layer.feature.geometry.type == "LineString" & layer.feature.properties.condition == "Poor")
       layer.setStyle({color: "#ff0000"});
-    if (layer.feature.geometry.type == "LineString" & layer.feature.properties.Condition == "Fair")
+    if (layer.feature.geometry.type == "LineString" & layer.feature.properties.condition == "Fair")
       layer.setStyle({color: "#EE9D08"});
-    if (layer.feature.geometry.type == "LineString" & layer.feature.properties.Condition == "Good")
+    if (layer.feature.geometry.type == "LineString" & layer.feature.properties.condition == "Good")
       layer.setStyle({color: "#0F7001"});
-    if (layer.feature.geometry.type == "Point" & layer.feature.properties.Condition == "Hazard")
+    if (layer.feature.geometry.type == "Point" & layer.feature.properties.condition == "Hazard")
       layer.setIcon(hazardIcon);
-    if (layer.feature.geometry.type == "Point" & layer.feature.properties.Condition == "Caution")
+    if (layer.feature.geometry.type == "Point" & layer.feature.properties.condition == "Caution")
       layer.setIcon(cautionIcon);
   }
 }
@@ -132,7 +153,7 @@ function styleMarkers (layer) {
 function fadeOldLines (layer) {
 //  console.log(layer.feature);
   if (layer.feature) {
-    var editedDate = new Date(layer.feature.properties.last_edited_date);
+    var editedDate = new Date(layer.feature.properties.updated_at);
     var today = new Date();
     var timeDiff = Math.abs(editedDate.getTime() - today.getTime());
     var daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -150,7 +171,7 @@ function fadeOldLines (layer) {
 
 function fadeOldPoints (layer) {
   if (layer.feature) {
-    var editedDate = new Date(layer.feature.properties.last_edited_date);
+    var editedDate = new Date(layer.feature.properties.updated_at);
     var today = new Date();
     var timeDiff = Math.abs(editedDate.getTime() - today.getTime());
     var daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -164,19 +185,6 @@ function fadeOldPoints (layer) {
     else
       layer.setOpacity(0.1);
   }
-}
-
-function initNewLayer(layer) {
-  var layerGeoJSON = layer.toGeoJSON()
-  layerGeoJSON.properties.last_edited_date = new Date();
-  var layerGeoJSONNewClass = L.geoJson(layerGeoJSON)
-  var layerForDrawnItems = layerGeoJSONNewClass._layers[Object.keys(layerGeoJSONNewClass._layers)[0]]
-  var popupText = createPopup(layerForDrawnItems);
-  layerForDrawnItems.bindPopup(popupText);
-  currentLayer = layerForDrawnItems;
-  drawnItems.addLayer(layerForDrawnItems);
-  drawnItems._layers[Object.keys(drawnItems._layers)[Object.keys(drawnItems._layers).length - 1]].openPopup()
-//  console.log(layerGeoJSONNewClass._layers[Object.keys(layerGeoJSONNewClass._layers)[0]]);
 }
 
 function geolocateMe() {
@@ -197,5 +205,20 @@ function geoError() {
 
 function deleteLayers(layer) {
   drawnItems.removeLayer(layer);
-  writeData();
+  var q = "DELETE FROM winterbiking WHERE cartodb_id = " + layer.feature.properties.cartodb_id
+  $.post("./php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
+  });
+}
+
+function editLayers(layer) {
+  var editGeoJSON = layer.toGeoJSON();
+  var q = 'UPDATE winterbiking SET the_geom = (ST_SetSRID(ST_AsText(ST_GeomFromGeoJSON(\'' + JSON.stringify(editGeoJSON.geometry) + '\')),4326)) WHERE cartodb_id = ' + layer.feature.properties.cartodb_id
+  $.post("./php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
+  });
 }

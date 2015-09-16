@@ -34,9 +34,6 @@
     </div> -->
     <script>
 //			var pos = L.GeoIP.getPosition();
-			var bikeEdits, bikeJson;
-
-//      <?php include "./php/readwbjson.php"; ?>
 
       var map = L.map('map', {
         center: [53.53, -113.53],
@@ -69,11 +66,13 @@
       map.on('draw:created', function (e) {
         var type = e.layerType,
             layer = e.layer;
-//        console.log(type);
-        initNewLayer(layer);
+        insertNewLayer(layer);
       });
       map.on('draw:deleted', function (e) {
         e.layers.eachLayer(deleteLayers);
+      });
+      map.on('draw:edited', function (e) {
+        e.layers.eachLayer(editLayers);
       });
 
       var legend = L.control({position: 'bottomright'});
