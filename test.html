@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Biking and Pedestrian Collisions</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/winterbiking.css" />
+    <link rel="stylesheet" href="./css/L.Control.Locate.min.css" />
+    <link rel="stylesheet" href="//leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="//leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="//cdn.leafletjs.com/leaflet-0.7.3/leaflet-src.js"></script>
+    <script src="./js/basemaps.js" type="text/javascript"></script>
+    <script src="./js/L.Control.Locate.min.js" type="text/javascript"></script>
+    <script src="//leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js" type="text/javascript"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="./js/featureFunctions.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="map" class="roundedCorners shadow"></div>
+    </div>
+    <script>
+      var map = L.map('map', {
+        center: [53.53, -113.53],
+        zoom: 11,
+        maxZoom: 20
+      });
+
+/*      var url = "https://geodarcy.cartodb.com/api/v2/sql?q=INSERT INTO winterbiking (comment) VALUES ('foo')"
+      $.get(url, function(data) {
+        console.log(data);
+      });
+*/
+      var q = "INSERT INTO winterbiking (comment) VALUES ('foo') RETURNING cartodb_id"
+      $.post("./php/callInsertProxy.php", {
+        qurl:q,
+        cache: false,
+        timeStamp: new Date().getTime()
+      }, function(data) {
+        var foo = JSON.parse(data);
+        console.log(foo["rows"][0]["cartodb_id"]);
+//        refreshLayer();
+      });
+    </script>
+  </body>
+</html>
