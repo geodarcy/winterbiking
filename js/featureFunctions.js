@@ -12,7 +12,7 @@ var hazardIcon = L.icon({
   popupAnchor: [-3, -15]
 });
 
-var currentLayer, jsonData;
+var currentLayer;
 
 function readData() {
   var url = 'https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM winterbiking WHERE the_geom IS NOT null and updated_at > CURRENT_DATE - 30';
@@ -24,7 +24,7 @@ function readData() {
 		});
 	}
 	catch(err) {
-	  console.log("There are no data yet.");
+		console.log("There are no data yet.");
 	}
 }
 
@@ -38,7 +38,7 @@ function insertNewLayer(layer) {
   }, function(data) {
     var foo = JSON.parse(data);
 //    console.log(insertGeoJSON);
-    insertGeoJSON.properties.cartodb_id = foo["rows"][0]["cartodb_id"];
+    insertGeoJSON.properties.cartodb_id = foo.rows[0]["cartodb_id"];
     insertGeoJSON.properties.updated_at = new Date();
     L.geoJson(insertGeoJSON, {
       onEachFeature: initBikeJson
@@ -49,7 +49,7 @@ function insertNewLayer(layer) {
 function changeCondition(value) {
   currentLayer.feature.properties.condition = value;
   currentLayer.feature.properties.updated_at = new Date();
-  var q = "UPDATE winterbiking SET condition = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id
+  var q = "UPDATE winterbiking SET condition = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
   $.post("./php/callInsertProxy.php", {
     qurl:q,
     cache: false,
@@ -67,7 +67,7 @@ function changeCondition(value) {
 function changeComment(value) {
   currentLayer.feature.properties.comment = value;
   currentLayer.feature.properties.updated_at = new Date();
-  var q = "UPDATE winterbiking SET comment = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id
+  var q = "UPDATE winterbiking SET comment = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
   $.post("./php/callInsertProxy.php", {
     qurl:q,
     cache: false,
@@ -84,7 +84,7 @@ function changeComment(value) {
 function changeCreator(value) {
   currentLayer.feature.properties.creator = value;
   currentLayer.feature.properties.updated_at = new Date();
-  var q = "UPDATE winterbiking SET creator = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id
+  var q = "UPDATE winterbiking SET creator = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
   $.post("./php/callInsertProxy.php", {
     qurl:q,
     cache: false,
@@ -217,7 +217,7 @@ function geoError() {
 
 function deleteLayers(layer) {
   drawnItems.removeLayer(layer);
-  var q = "DELETE FROM winterbiking WHERE cartodb_id = " + layer.feature.properties.cartodb_id
+  var q = "DELETE FROM winterbiking WHERE cartodb_id = " + layer.feature.properties.cartodb_id;
   $.post("./php/callInsertProxy.php", {
     qurl:q,
     cache: false,
@@ -227,7 +227,7 @@ function deleteLayers(layer) {
 
 function editLayers(layer) {
   var editGeoJSON = layer.toGeoJSON();
-  var q = 'UPDATE winterbiking SET the_geom = (ST_SetSRID(ST_AsText(ST_GeomFromGeoJSON(\'' + JSON.stringify(editGeoJSON.geometry) + '\')),4326)) WHERE cartodb_id = ' + layer.feature.properties.cartodb_id
+  var q = 'UPDATE winterbiking SET the_geom = (ST_SetSRID(ST_AsText(ST_GeomFromGeoJSON(\'' + JSON.stringify(editGeoJSON.geometry) + '\')),4326)) WHERE cartodb_id = ' + layer.feature.properties.cartodb_id;
   $.post("./php/callInsertProxy.php", {
     qurl:q,
     cache: false,
