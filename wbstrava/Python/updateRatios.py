@@ -29,8 +29,9 @@ for segment in currentSegments:
     leaderboardTimes = [x.moving_time.seconds for x in leaderboard if x.rank <= 100]
 #    print('Updated {} with {} efforts and {} leaderboard entries'.format(segment, len(weekEffortsTimes), leaderboard.effort_count))
   except:
-    cl.sql('DELETE FROM wbstrava WHERE segment_id=' + str(segment))
-    print('Deleted: {}'.format(client.get_segment(segment).name))
+#    cl.sql('DELETE FROM wbstrava WHERE segment_id=' + str(segment))
+#    print('Deleted: {}'.format(client.get_segment(segment).name))
+    print('Couldn\'t update: {}'.format(client.get_segment(segment).name))
 # monthEfforts = client.get_segment_efforts(segment, start_date_local=monthAgo, end_date_local=now)
 # monthEffortsTimes = [i.moving_time.seconds for i in monthEfforts]
 # if len(weekEffortsTimes) and len(monthEffortsTimes):

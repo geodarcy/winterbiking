@@ -15,7 +15,7 @@ var hazardIcon = L.icon({
 var currentLayer, jsonData;
 
 function readData() {
-  var url = 'https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM winterbiking WHERE the_geom IS NOT null';
+  var url = 'https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM winterbiking WHERE the_geom IS NOT null and updated_at > CURRENT_DATE - 30';
   try {
 		$.getJSON(url, function(data) {
 			var bikeJson = L.geoJson(data, {
@@ -46,7 +46,7 @@ function insertNewLayer(layer) {
   });
 }
 
-function changecondition(value) {
+function changeCondition(value) {
   currentLayer.feature.properties.condition = value;
   currentLayer.feature.properties.updated_at = new Date();
   var q = "UPDATE winterbiking SET condition = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id
@@ -56,11 +56,15 @@ function changecondition(value) {
     timeStamp: new Date().getTime()
   });
   styleMarkers(currentLayer);
+	if (currentLayer.feature.geometry.type == "LineString")
+    fadeOldLines(currentLayer);
+	else if (currentLayer.feature.geometry.type == "Point")
+    fadeOldPoints(currentLayer);
   var popupText = createPopup(currentLayer);
   currentLayer.bindPopup(popupText);
 }
 
-function changecomment(value) {
+function changeComment(value) {
   currentLayer.feature.properties.comment = value;
   currentLayer.feature.properties.updated_at = new Date();
   var q = "UPDATE winterbiking SET comment = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id
@@ -69,6 +73,10 @@ function changecomment(value) {
     cache: false,
     timeStamp: new Date().getTime()
   });
+	if (currentLayer.feature.geometry.type == "LineString")
+    fadeOldLines(currentLayer);
+	else if (currentLayer.feature.geometry.type == "Point")
+    fadeOldPoints(currentLayer);
   var popupText = createPopup(currentLayer);
   currentLayer.bindPopup(popupText);
 }
@@ -82,13 +90,17 @@ function changeCreator(value) {
     cache: false,
     timeStamp: new Date().getTime()
   });
+	if (currentLayer.feature.geometry.type == "LineString")
+    fadeOldLines(currentLayer);
+	else if (currentLayer.feature.geometry.type == "Point")
+    fadeOldPoints(currentLayer);
   var popupText = createPopup(currentLayer);
   currentLayer.bindPopup(popupText);
 }
 
 function createPopup(layer) {
   var myLayer = layer;
-  var popupText = "condition: <select id='condition' onchange='changecondition(this.value)'>";
+  var popupText = "Condition: <select id='condition' onchange='changeCondition(this.value)'>";
   if (!layer.feature.properties.condition)
     popupText += "<option disabled selected='selected'>Select a riding condition</option><option";
   else
@@ -112,9 +124,9 @@ function createPopup(layer) {
       popupText += " selected='selected' ";
     popupText += ">Hazard</option></select></br>";
   }
-  popupText += "comment: <textarea onchange='changecomment(this.value)' tabindex='1'>" + layer.feature.properties.comment + "</textarea><br>";
+  popupText += "Comment: <textarea onchange='changeComment(this.value)' tabindex='1'>" + layer.feature.properties.comment + "</textarea><br>";
   popupText += "Created By: <textarea onchange='changeCreator(this.value)' tabindex='2'>" + layer.feature.properties.creator + "</textarea><br>";
-  popupText += "Created On: <b>" + layer.feature.properties.updated_at.toDateString() + "</b>";
+  popupText += "Updated On: <b>" + layer.feature.properties.updated_at.toDateString() + "</b>";
   return popupText;
 }
 
