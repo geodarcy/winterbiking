@@ -82,6 +82,15 @@
         return div;
       };
       legend.addTo(map);
+			
+			var showAllData = L.control({position: 'topright'});
+			showAllData.onAdd = function (map) {
+				var div = L.DomUtil.create('div', 'showAllDataDiv');
+				div.innerHTML = '<i class="fa fa-globe" id="showAllDataDiv" title="Show all data"></i>';
+				return div;
+			};
+			showAllData.addTo(map);
+			document.getElementById('showAllDataDiv').addEventListener('click', showAllDataFcn, false);
     </script>
   </body>
 </html>
