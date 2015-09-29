@@ -40,7 +40,10 @@
 					onEachFeature: function (feature, layer) {
 					  styleLayer(layer);
 						layer.cartodb_id=feature.properties.cartodb_id;
-						layer.bindPopup("This week's efforts are " + Math.round(feature.properties['ratio']*1000)/10 + "% of the top 100.");
+						if (feature.properties['ratio'])
+						 layer.bindPopup("This week's efforts are " + Math.round(feature.properties['ratio']*1000)/10 + "% of the top 100.");
+						else
+							layer.bindPopup("There were no efforts on this segment in the past week");
 					}
 				});
 			  bikeJson.addTo(map);
@@ -61,7 +64,7 @@
 				  layer.setStyle({opacity: 0.9, color: '#ffffbf'});
 				else if (layer.feature.properties['ratio'] >= 0.2)
 				  layer.setStyle({opacity: 0.9, color: '#fdae61'});
-				else if (layer.feature.properties['ratio'] > 0)
+				else if (layer.feature.properties['ratio'] > 0.0)
 					layer.setStyle({opacity: 0.9, color: '#d7191c'});
 				else
 					layer.setStyle({opacity: 0.5, color: '#777777'});
@@ -90,7 +93,7 @@
 				return div;
 			};
 			showAllData.addTo(map);
-			document.getElementById('showAllDataDiv').addEventListener('click', showAllDataFcn, false);
+			document.getElementById('showAllDataDiv').addEventListener('click', function(){map.fitBounds(bikeJson.getBounds())}, false);
     </script>
   </body>
 </html>

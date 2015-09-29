@@ -37,8 +37,8 @@ for segment in currentSegments:
 # if len(weekEffortsTimes) and len(monthEffortsTimes):
 #  segmentMean = np.divide(np.mean(weekEffortsTimes), np.mean(monthEffortsTimes)).astype('str')
   if len(weekEffortsTimes) and len(leaderboardTimes):
-    segmentMean = np.divide(np.mean(weekEffortsTimes), np.mean(leaderboardTimes)).astype('str')
+    segmentMean = np.divide(np.mean(leaderboardTimes), np.mean(weekEffortsTimes)).astype('str')
   else:
     segmentMean = '0'
   cl.sql('UPDATE wbstrava SET ratio = ' + segmentMean + ' WHERE segment_id=' + str(segment))
-  time.sleep(1)
+  time.sleep(0.5)
