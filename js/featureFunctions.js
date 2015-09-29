@@ -234,3 +234,7 @@ function editLayers(layer) {
     timeStamp: new Date().getTime()
   });
 }
+
+function showAllDataFcn() {
+	map.fitBounds(drawnItems.getBounds());
+}
