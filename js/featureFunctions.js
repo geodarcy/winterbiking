@@ -238,3 +238,12 @@ function editLayers(layer) {
 function showAllDataFcn() {
 	map.fitBounds(drawnItems.getBounds());
 }
+
+function addSegment() {
+	var q = 'INSERT INTO wbstrava (segment_id) VALUES (' + document.getElementById("segmentID").value + ')';
+  $.post("../php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
+  });
+}
