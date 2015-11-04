@@ -1,2 +1,0 @@
-0 22 * * * /Users/Darcy/Documents/github/winterbiking/wbstrava/Python/updateRatios.py > /Users/Darcy/Documents/github/winterbiking/wbstrava/Python/addSegmentsCrontab.txt
-30 22 * * * /Users/Darcy/Documents/github/winterbiking/wbstrava/Python/updateRatios.py > /Users/Darcy/Documents/github/winterbiking/wbstrava/Python/updateRatiosCrontab.txt

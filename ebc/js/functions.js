@@ -115,13 +115,18 @@ console.log(layer);
 
 function styleMarkers (layer) { // needs to be edited
 //  console.log(layer);
+  layer.setStyle({opacity: 0.9});
   if (layer.feature) {
-    if (layer.feature.properties.policost == "High - severe disruption in driving patterns")
-      layer.setStyle({color: "#ff0000"});
-    if (layer.feature.properties.policost == "Medium - moderate disruption")
-      layer.setStyle({color: "#EE9D08"});
-    if (layer.feature.properties.policost == "Low - the street is overbuilt, low disruption")
-      layer.setStyle({color: "#0F7001"});
+    if (layer.feature.properties.quality == "Separated cycle track")
+      layer.setStyle({color: "#8BE04A"});
+    else if (layer.feature.properties.quality == "Multi-use path")
+      layer.setStyle({color: "#ff7f00"});
+    else if (layer.feature.properties.quality == "Traffic-calmed bike boulevard")
+      layer.setStyle({color: "#e41a1c"});
+    else if (layer.feature.properties.quality == "Other")
+      layer.setStyle({color: "#064090"});
+		else
+			layer.setStyle({color: "#984ea3"});
   }
 }
 
@@ -185,55 +190,37 @@ function changeValue(value, id) {
 		styleMarkers(currentLayer);
 }
 
-/*
-function changeComment(value) {
-  currentLayer.feature.properties.comment = value;
-  currentLayer.feature.properties.updated_at = new Date();
-  var q = "UPDATE winterbiking SET comment = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
-  $.post("./php/callInsertProxy.php", {
-    qurl:q,
-    cache: false,
-    timeStamp: new Date().getTime()
-  });
-	if (currentLayer.feature.geometry.type == "LineString")
-    fadeOldLines(currentLayer);
-	else if (currentLayer.feature.geometry.type == "Point")
-    fadeOldPoints(currentLayer);
-  var popupText = createPopup(currentLayer);
-  currentLayer.bindPopup(popupText);
+function loadBikePaths() {
+  var url = './data/bikepaths.geojson';
+  try {
+		$.getJSON(url, function(data) {
+			var readLayer = L.geoJson(data, {
+				onEachFeature: function (feature, layer) {
+					var popupText = "Existing infrastructure<br>Type: <strong>" + feature.properties.type + "</strong>";
+					layer.bindPopup(popupText);
+					layer.setStyle({weight: 3,
+						dashArray: "5,5"
+					});
+				  if (layer.feature) {
+				    if (layer.feature.properties.type == "Contra-Flow")
+				      layer.setStyle({color: "#8BE04A"});
+				    else if (layer.feature.properties.type == "Marked On-Street")
+				      layer.setStyle({color: "#8BE04A"});
+				    else if (layer.feature.properties.type == "Shared Use Pathway")
+				      layer.setStyle({color: "#ff7f00"});
+				    else if (layer.feature.properties.type == "Signed Route")
+				      layer.setStyle({color: "#064090"});
+						else if (layer.feature.properties.type == "Shared Lane")
+							layer.setStyle({color: "#984ea3"});
+						else
+							layer.setStyle({color: "#aaaaaa"});
+				  }
+				  existingBikeJson.addLayer(layer);
+				}
+			});
+		});
+	}
+	catch(err) {
+		console.log("There are no data yet.");
+	}
 }
-
-function changeCreator(value) {
-  currentLayer.feature.properties.creator = value;
-  currentLayer.feature.properties.updated_at = new Date();
-  var q = "UPDATE winterbiking SET creator = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
-  $.post("./php/callInsertProxy.php", {
-    qurl:q,
-    cache: false,
-    timeStamp: new Date().getTime()
-  });
-	if (currentLayer.feature.geometry.type == "LineString")
-    fadeOldLines(currentLayer);
-	else if (currentLayer.feature.geometry.type == "Point")
-    fadeOldPoints(currentLayer);
-  var popupText = createPopup(currentLayer);
-  currentLayer.bindPopup(popupText);
-}
-
-function geolocateMe() {
-  if (geoPosition.init()) {
-    geoPosition.getCurrentPosition(geoSuccess, geoError);
-  }
-}
-
-function geoSuccess(p) {
-  map.panTo([p.coords.latitude, p.coords.longitude]);
-  geolocateMarker = new L.marker([p.coords.latitude, p.coords.longitude]).addTo(map);
-	geolocateMarker.bindPopup('You may be here').openPopup();
-}
-
-function geoError() {
-  alert("Sorry, couldn't find you!");
-}
-
-*/

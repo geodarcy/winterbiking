@@ -14,6 +14,7 @@
     <script src="./LeafletDraw/leaflet.draw.js" type="text/javascript"></script>
     <script src="./js/basemaps.js" type="text/javascript"></script>
     <script src="./js/L.Control.Locate.min.js" type="text/javascript"></script>
+    <script src="./data/bikepaths.js" type="text/javascript"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   </head>
   <body>
@@ -38,6 +39,8 @@
       });
       var bikeJson = new L.FeatureGroup();
 			map.addLayer(bikeJson);
+      var existingBikeJson = new L.FeatureGroup();
+			map.addLayer(existingBikeJson);
 
       L.control.layers(baseMaps).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
@@ -48,6 +51,7 @@
       map.addLayer(drawnItems);
 
 			readData();
+			loadBikePaths();
 
       var drawControl = new L.Control.Draw({
         draw: {
@@ -78,10 +82,16 @@
       legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend'),
           labels = [];
-        labels.push('Political cost of creating infrastructure');
-        labels.push('<i style="background:#0F7001"></i> Low');
-        labels.push('<i style="background:#EE9D08"></i> Medium');
-        labels.push('<i style="background:#ff0000"></i> High');
+        labels.push('<strong>Quality of infrastructure</strong>');
+        labels.push('<i style="background:#8BE04A"></i> Separated cycle track');
+        labels.push('<i style="background:#ff7f00"></i> Multi-use path');
+        labels.push('<i style="background:#e41a1c"></i> Traffic-calmed bike boulevard');
+        labels.push('<i style="background:#064090"></i> Other');
+        labels.push('<hr><strong>Current infrastructure as of Spring 2015 (dashed)</strong>');
+        labels.push('<i style="background:#8BE04A"></i> Marked On-Street');
+        labels.push('<i style="background:#ff7f00"></i> Shared Use Pathway');
+        labels.push('<i style="background:#984ea3"></i> Shared Lane');
+        labels.push('<i style="background:#064090"></i> Signed Route');
         div.innerHTML = labels.join('<br><br>');
         return div;
       };
@@ -94,7 +104,7 @@
 				return div;
 			};
 			showAllData.addTo(map);
-			document.getElementById('showAllDataDiv').addEventListener('click', function(){map.fitBounds(bikeJson.getBounds())}, false);
+			document.getElementById('showAllDataDiv').addEventListener('click', function(){map.fitBounds(existingBikeJson.getBounds())}, false);
     </script>
   </body>
 </html>
