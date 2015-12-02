@@ -40,9 +40,12 @@ function createPopup(layer) { // needs to be edited
 
   popupText += "<tr><td>Political Cost:</td><td><strong>" + layer.feature.properties.policost + "</strong></td></tr>";
 
-  popupText += "<tr><td>Location:</td><td><strong>" + layer.feature.properties.location + "</strong></td></tr>";
-  popupText += "<tr><td>Comments:</td><td><strong>" + layer.feature.properties.comments + "</strong></td></tr>";
-  popupText += "<tr><td>Image:</td><td><strong>" + layer.feature.properties.image + "</strong></td></tr></table>";
+  if (layer.feature.properties.location)
+	  popupText += "<tr><td>Location:</td><td><strong>" + layer.feature.properties.location + "</strong></td></tr>";
+  if (layer.feature.properties.comments)
+    popupText += "<tr><td>Comments:</td><td><strong>" + layer.feature.properties.comments + "</strong></td></tr>";
+  if (layer.feature.properties.image)
+    popupText += "<tr><td>Image:</td><td><strong>" + layer.feature.properties.image + "</strong></td></tr></table>";
 	return popupText;
 }
 
@@ -108,6 +111,7 @@ function createEditablePopup(layer) { // needs to be edited
   popupText += "Location:</br><textarea id='location' onchange='changeValue(this.value, this.id)' tabindex='1'>" + layer.feature.properties.location + "</textarea><br>";
   popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2'>" + layer.feature.properties.comments + "</textarea><br>";
   popupText += "Image:</br><textarea id='image' onchange='changeValue(this.value, this.id)' tabindex='3'>" + layer.feature.properties.image + "</textarea><br>";
+	popupText += "<input type=BUTTON value='Submit' name='mySubmit' onClick='closeThisPopup()'>";
 	return popupText;
 }
 
@@ -222,4 +226,8 @@ function loadBikePaths() {
 	catch(err) {
 		console.log("There are no data yet.");
 	}
+}
+
+function closeThisPopup() {
+	currentLayer.closePopup();
 }
