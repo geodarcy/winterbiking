@@ -41,7 +41,10 @@ function insertNewLayer(layer) {
     insertGeoJSON.properties.cartodb_id = foo.rows[0]["cartodb_id"];
     insertGeoJSON.properties.updated_at = new Date();
     L.geoJson(insertGeoJSON, {
-      onEachFeature: initBikeJson
+      onEachFeature: function (feature, layer) {
+				initBikeJson(feature,layer);
+				layer.openPopup();
+			}
     });
   });
 }

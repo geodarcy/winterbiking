@@ -33,6 +33,7 @@
       </div>
     </div> -->
     <script>
+			var testLayer;
       var map = L.map('map', {
         center: [53.53, -113.53],
         zoom: 13
@@ -41,8 +42,9 @@
 			map.addLayer(bikeJson);
       var existingBikeJson = new L.FeatureGroup();
 			map.addLayer(existingBikeJson);
+			var overlays = {"Existing infrastructure": existingBikeJson, "Previous suggestions": bikeJson};
 
-      L.control.layers(baseMaps).addTo(map);
+      L.control.layers(baseMaps, overlays).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
       var locateControl = L.control.locate({position: 'topright', locateOptions: {maxZoom: 14}}).addTo(map);
       map.addLayer(cartoDB);
@@ -77,21 +79,23 @@
       map.on('draw:edited', function (e) {
         e.layers.eachLayer(editLayers);
       });
+			map.on('draw:drawstop', function (e) {
+				testLayer = e;
+//				e.target.openPopup();
+			});
 
       var legend = L.control({position: 'bottomright'});
       legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend'),
           labels = [];
-        labels.push('<strong>Quality of infrastructure</strong>');
-        labels.push('<i style="background:#8BE04A"></i> Separated cycle track');
-        labels.push('<i style="background:#ff7f00"></i> Multi-use path');
-        labels.push('<i style="background:#e41a1c"></i> Traffic-calmed bike boulevard');
-        labels.push('<i style="background:#064090"></i> Other');
-        labels.push('<hr><strong>Current infrastructure as of Spring 2015 (dashed)</strong>');
-        labels.push('<i style="background:#8BE04A"></i> Marked On-Street');
-        labels.push('<i style="background:#ff7f00"></i> Shared Use Pathway');
-        labels.push('<i style="background:#984ea3"></i> Shared Lane');
-        labels.push('<i style="background:#064090"></i> Signed Route');
+        labels.push('<strong>Your suggestions</strong>');
+        labels.push('<svg width="18" height="12"> <line x1="0" y1="7" x2="18" y2="7" style="stroke:#8BE04A;stroke-width:2"/></svg> Separated cycle track');
+        labels.push('<svg width="18" height="12"> <line x1="0" y1="7" x2="18" y2="7" style="stroke:#ff7f00;stroke-width:2"/></svg> Multi-use path');
+        labels.push('<svg width="18" height="12"> <line x1="0" y1="7" x2="18" y2="7" style="stroke:#e41a1c;stroke-width:2"/></svg> Traffic-calmed bike boulevard');
+        labels.push('<svg width="18" height="12"> <line x1="0" y1="7" x2="18" y2="7" style="stroke:#064090;stroke-width:2"/></svg> Other');
+        labels.push('<hr><strong>Current infrastructure (dashed)</strong>');
+        labels.push('<svg width="18" height="12"> <line stroke-dasharray="5, 5" x1="0" y1="7" x2="18" y2="7" style="stroke:#8BE04A;stroke-width:2"/></svg> Marked On-Street');
+        labels.push('<svg width="18" height="12"> <line stroke-dasharray="5, 5" x1="0" y1="7" x2="18" y2="7" style="stroke:#ff7f00;stroke-width:2"/></svg> Shared Use Pathway');
         div.innerHTML = labels.join('<br><br>');
         return div;
       };

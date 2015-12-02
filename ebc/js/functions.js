@@ -34,21 +34,19 @@ function initBikeJson (feature, layer) {
 
 function createPopup(layer) { // needs to be edited
   var myLayer = layer;
-  var popupText = "Type Of Infrastructure: <strong>" + layer.feature.properties.type + "</strong></br>";
+  var popupText = "<table><tr><td>Type Of Infrastructure:</td><td><strong>" + layer.feature.properties.type + "</strong></td></tr>";
 
-  popupText += "Quality Of Infrastructure: <strong>" + layer.feature.properties.quality + "</strong></br>";
+  popupText += "<tr><td>Quality Of Infrastructure:</td><td><strong>" + layer.feature.properties.quality + "</strong></td></tr>";
 
-  popupText += "Political Cost: <strong>" + layer.feature.properties.policost + "</strong></br>";
+  popupText += "<tr><td>Political Cost:</td><td><strong>" + layer.feature.properties.policost + "</strong></td></tr>";
 
-  popupText += "Location: <strong>" + layer.feature.properties.location + "</strong></br>";
-  popupText += "Comments: <strong>" + layer.feature.properties.comments + "</strong></br>";
-  popupText += "Image: <strong>" + layer.feature.properties.image + "</strong></br>";
+  popupText += "<tr><td>Location:</td><td><strong>" + layer.feature.properties.location + "</strong></td></tr>";
+  popupText += "<tr><td>Comments:</td><td><strong>" + layer.feature.properties.comments + "</strong></td></tr>";
+  popupText += "<tr><td>Image:</td><td><strong>" + layer.feature.properties.image + "</strong></td></tr></table>";
 	return popupText;
 }
 
 function createEditablePopup(layer) { // needs to be edited
-//  var myLayer = layer;
-console.log(layer);
   var popupText = "Type Of Infrastructure: <select id='type' onchange='changeValue(this.value, this.id)'>";
   if (!layer.feature.properties.type)
     popupText += "<option disabled selected='selected'>Select Type Of Infrastructure</option><option";
@@ -107,9 +105,9 @@ console.log(layer);
   popupText += ">Other</option></select></br>";
 
 
-  popupText += "Location: <textarea id='location' onchange='changeValue(this.value, this.id)' tabindex='1'>" + layer.feature.properties.location + "</textarea><br>";
-  popupText += "Comments: <textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2'>" + layer.feature.properties.comments + "</textarea><br>";
-  popupText += "Image: <textarea id='image' onchange='changeValue(this.value, this.id)' tabindex='3'>" + layer.feature.properties.image + "</textarea><br>";
+  popupText += "Location:</br><textarea id='location' onchange='changeValue(this.value, this.id)' tabindex='1'>" + layer.feature.properties.location + "</textarea><br>";
+  popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2'>" + layer.feature.properties.comments + "</textarea><br>";
+  popupText += "Image:</br><textarea id='image' onchange='changeValue(this.value, this.id)' tabindex='3'>" + layer.feature.properties.image + "</textarea><br>";
 	return popupText;
 }
 
@@ -150,6 +148,7 @@ function insertNewLayer(layer) { // needs to be edited
 				layer.on('popupopen', function(){currentLayer = layer;});
 				styleMarkers(layer);
 				drawnItems.addLayer(layer);
+				layer.openPopup();
 			}
     });
   });
@@ -196,7 +195,7 @@ function loadBikePaths() {
 		$.getJSON(url, function(data) {
 			var readLayer = L.geoJson(data, {
 				onEachFeature: function (feature, layer) {
-					var popupText = "Existing infrastructure<br>Type: <strong>" + feature.properties.type + "</strong>";
+					var popupText = "Current infrastructure<br>Type: <strong>" + feature.properties.type + "</strong>";
 					layer.bindPopup(popupText);
 					layer.setStyle({weight: 3,
 						dashArray: "5,5"

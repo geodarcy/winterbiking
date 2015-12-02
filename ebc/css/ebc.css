@@ -191,3 +191,12 @@
   background-color: #FFF;
   padding:5px;
 }
+
+select {
+	width: 290px;
+}
+
+textarea {
+	width: 284px;
+	height: 30px;
+}
