@@ -171,16 +171,24 @@ function fadeOldLines (layer) {
     var editedDate = new Date(layer.feature.properties.updated_at);
     var today = new Date();
     var timeDiff = Math.abs(editedDate.getTime() - today.getTime());
-    var daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-  //  console.log(daysDiff);
-    if (daysDiff <= 7)
+    var daysDiff = timeDiff / (1000 * 3600 * 24);
+		var dashString = "15"
+		for (i=1; i<daysDiff; i++) {
+			dashString += ",10,2";
+		}
+		dashString += ",10"
+		if (daysDiff >= 1) {
+		  layer.setStyle({dashArray: dashString});
+	  }
+		layer.setStyle({opacity: (30-daysDiff)/30});
+/*    if (daysDiff <= 7)
       layer.setStyle({opacity: 1});
     else if (daysDiff <= 14)
       layer.setStyle({opacity: 0.5});
     else if (daysDiff <= 21)
       layer.setStyle({opacity: 0.25});
     else
-      layer.setStyle({opacity: 0.1});
+      layer.setStyle({opacity: 0.1}); */
   }
 }
 
