@@ -138,7 +138,7 @@
             var H = window.innerHeight;
 
             //snowflake particles
-            var mp = 25; //max particles
+            var mp = 250; //max particles
             var particles = [];
             for(var i = 0; i < mp; i++) {
                 particles.push({

@@ -60,9 +60,9 @@ function changeCondition(value) {
   });
   styleMarkers(currentLayer);
 	if (currentLayer.feature.geometry.type == "LineString")
-    fadeOldLines(currentLayer);
+    currentLayer.setOpacity({opacity: 1, dashArray: null});
 	else if (currentLayer.feature.geometry.type == "Point")
-    fadeOldPoints(currentLayer);
+    currentLayer.setOpacity({opacity: 1});
   var popupText = createPopup(currentLayer);
   currentLayer.bindPopup(popupText);
 }
@@ -77,9 +77,9 @@ function changeComment(value) {
     timeStamp: new Date().getTime()
   });
 	if (currentLayer.feature.geometry.type == "LineString")
-    fadeOldLines(currentLayer);
+    currentLayer.setOpacity({opacity: 1, dashArray: null});
 	else if (currentLayer.feature.geometry.type == "Point")
-    fadeOldPoints(currentLayer);
+    currentLayer.setOpacity({opacity: 1});
   var popupText = createPopup(currentLayer);
   currentLayer.bindPopup(popupText);
 }
@@ -94,9 +94,9 @@ function changeCreator(value) {
     timeStamp: new Date().getTime()
   });
 	if (currentLayer.feature.geometry.type == "LineString")
-    fadeOldLines(currentLayer);
+    currentLayer.setOpacity({opacity: 1, dashArray: null});
 	else if (currentLayer.feature.geometry.type == "Point")
-    fadeOldPoints(currentLayer);
+    currentLayer.setOpacity({opacity: 1});
   var popupText = createPopup(currentLayer);
   currentLayer.bindPopup(popupText);
 }
@@ -199,14 +199,7 @@ function fadeOldPoints (layer) {
     var timeDiff = Math.abs(editedDate.getTime() - today.getTime());
     var daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
   //  console.log(daysDiff);
-    if (daysDiff <= 7)
-      layer.setOpacity(1);
-    else if (daysDiff <= 14)
-      layer.setOpacity(0.5);
-    else if (daysDiff <= 21)
-      layer.setOpacity(0.25);
-    else
-      layer.setOpacity(0.1);
+    layer.setOpacity((30-daysDiff)/30);
   }
 }
 
