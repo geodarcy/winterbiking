@@ -33,7 +33,6 @@ function initBikeJson (feature, layer) {
 }
 
 function createPopup(layer) { // needs to be edited
-  var myLayer = layer;
   var popupText = "<table><tr><td>Type Of Infrastructure:</td><td><strong>" + layer.feature.properties.type + "</strong></td></tr>";
 
   popupText += "<tr><td>Quality Of Infrastructure:</td><td><strong>" + layer.feature.properties.quality + "</strong></td></tr>";
@@ -45,7 +44,12 @@ function createPopup(layer) { // needs to be edited
   if (layer.feature.properties.comments)
     popupText += "<tr><td>Comments:</td><td><strong>" + layer.feature.properties.comments + "</strong></td></tr>";
   if (layer.feature.properties.image)
-    popupText += "<tr><td>Image:</td><td><strong>" + layer.feature.properties.image + "</strong></td></tr></table>";
+    popupText += "<tr><td>Image:</td><td><strong>" + layer.feature.properties.image + "</strong></td></tr>";
+	if (localStorage.getItem("ID" + layer.feature.properties.cartodb_id) != 1)
+		popupText += "<tr><td><button onclick='addVote()'>I like it</button></td></tr>";
+	else
+		popupText += "<tr><td><button disabled>I liked it</button></td></tr>";
+	popupText += "</table>";
 	return popupText;
 }
 
@@ -230,4 +234,18 @@ function loadBikePaths() {
 
 function closeThisPopup() {
 	currentLayer.closePopup();
+}
+
+function addVote() {
+	var likes = currentLayer.feature.properties.likecount;
+	likes++;
+  var q = "UPDATE ebcplanning SET likecount = '" + likes + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
+  $.post("./php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
+  });
+	localStorage.setItem("ID" + currentLayer.feature.properties.cartodb_id, 1);
+	var popupText = createPopup(currentLayer);
+	currentLayer.bindPopup(popupText);
 }
