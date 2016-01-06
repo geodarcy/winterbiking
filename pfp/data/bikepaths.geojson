@@ -4,6 +4,7 @@
                                                                                 
 "features": [
 { "type": "Feature", "properties": { "id": 389, "type": "Marked On-Street", "year": null, "length": null }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -113.504774295555904, 53.543014433064663 ], [ -113.499177954905363, 53.542996554283107 ], [ -113.49746294728665, 53.5429965542831 ], [ -113.493777185299066, 53.543157463045219 ], [ -113.488993216678438, 53.543470339442813 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 390, "type": "Marked On-Street", "year": null, "length": null }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -113.539451041906162, 53.543036990858226 ], [ -113.512159861559212, 53.543002362040234 ] ] ] } },
 { "type": "Feature", "properties": { "id": 65, "type": "Contra-Flow", "year": 0, "length": 142.930397 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -113.514362334095253, 53.524016230249913 ], [ -113.51220832481097, 53.52397179891036 ] ] ] } },
 { "type": "Feature", "properties": { "id": 66, "type": "Contra-Flow", "year": 0, "length": 60.058206 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -113.520650893839132, 53.523613645387556 ], [ -113.52076454519063, 53.524149051661475 ] ] ] } },
 { "type": "Feature", "properties": { "id": 93, "type": "Marked On-Street", "year": 2013, "length": 566.465045 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -113.527089693440942, 53.456628621577046 ], [ -113.529515119069472, 53.456413399230463 ], [ -113.531664354912081, 53.456696911764517 ], [ -113.532780191346362, 53.456877173366259 ], [ -113.535282888552487, 53.456242504841875 ] ] ] } },
@@ -311,6 +312,6 @@
 { "type": "Feature", "properties": { "id": 383, "type": "Marked On-Street", "year": 2013, "length": 1480.687155 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -113.529098166313801, 53.496515647485701 ], [ -113.528767184304215, 53.48321183108731 ] ] ] } },
 { "type": "Feature", "properties": { "id": 384, "type": "Marked On-Street", "year": 0, "length": 248.313014 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -113.531156181011255, 53.509405428497736 ], [ -113.531231259906036, 53.507174572504645 ] ] ] } },
 { "type": "Feature", "properties": { "id": 385, "type": "Marked On-Street", "year": 0, "length": 162.922034 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -113.528744246493019, 53.509681283869455 ], [ -113.531156181011255, 53.509405428497736 ] ] ] } },
-{ "type": "Feature", "properties": { "id": 388, "type": "Marked On-Street", "year": null, "length": null }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -113.556395943200982, 53.543055357840508 ], [ -113.512159861559212, 53.543002362040234 ], [ -113.512159861559212, 53.543002362040234 ] ] ] } }
+{ "type": "Feature", "properties": { "id": 388, "type": "Shared Use Pathway", "year": null, "length": null }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -113.556395943200982, 53.543055357840508 ], [ -113.539451041906162, 53.543036990858226 ] ] ] } }
 ]
 }

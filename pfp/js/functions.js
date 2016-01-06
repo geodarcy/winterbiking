@@ -39,16 +39,17 @@ function createPopup(layer) { // needs to be edited
 
   popupText += "<tr><td>Political Cost:</td><td><strong>" + layer.feature.properties.policost + "</strong></td></tr>";
 
-  if (layer.feature.properties.location)
-	  popupText += "<tr><td>Location:</td><td><strong>" + layer.feature.properties.location + "</strong></td></tr>";
   if (layer.feature.properties.comments)
     popupText += "<tr><td>Comments:</td><td><strong>" + layer.feature.properties.comments + "</strong></td></tr>";
-  if (layer.feature.properties.image)
-    popupText += "<tr><td>Image:</td><td><strong>" + layer.feature.properties.image + "</strong></td></tr>";
-	if (localStorage.getItem("ID" + layer.feature.properties.cartodb_id) != 1)
-		popupText += "<tr><td><button onclick='addVote()'>I like it</button></td></tr>";
-	else
-		popupText += "<tr><td><button disabled>I liked it</button></td></tr>";
+	if (localStorage.getItem("ID" + layer.feature.properties.cartodb_id) != 1) {
+		popupText += "<tr><td><button value='like' onclick='addVote(value)'>I like it</button></td>";
+		popupText += "<td><button value='hate' onclick='addVote(value)'>I don't like it</button></td></tr>";
+	}
+	else {
+		popupText += "<tr><td><button disabled>I liked it</button></td>";
+		popupText += "<td><button disabled>I didn't like it</button></td></tr>";
+	}
+	popupText += "<tr><td><button onclick='addComment()'>Add comment</button></td></tr>";
 	popupText += "</table>";
 	return popupText;
 }
@@ -110,11 +111,10 @@ function createEditablePopup(layer) { // needs to be edited
   if (layer.feature.properties.policost == 'Other')
     popupText += " selected='selected' ";
   popupText += ">Other</option></select></br>";
-
-
-  popupText += "Location:</br><textarea id='location' onchange='changeValue(this.value, this.id)' tabindex='1'>" + layer.feature.properties.location + "</textarea><br>";
-  popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2'>" + layer.feature.properties.comments + "</textarea><br>";
-  popupText += "Image:</br><textarea id='image' onchange='changeValue(this.value, this.id)' tabindex='3'>" + layer.feature.properties.image + "</textarea><br>";
+  if (layer.feature.properties.comments)
+    popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2'>" + layer.feature.properties.comments + "</textarea><br>";
+	else
+		popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2' placeholder='Add your comment...'></textarea><br>";
 	popupText += "<input type=BUTTON value='Submit' name='mySubmit' onClick='closeThisPopup()'>";
 	return popupText;
 }
@@ -206,15 +206,16 @@ function loadBikePaths() {
 					var popupText = "Current infrastructure<br>Type: <strong>" + feature.properties.type + "</strong>";
 					layer.bindPopup(popupText);
 					layer.setStyle({weight: 3,
-						dashArray: "5,5"
+													dashArray: "5,5",
+													opacity: 0.9
 					});
 				  if (layer.feature) {
 				    if (layer.feature.properties.type == "Contra-Flow")
-				      layer.setStyle({color: "#8BE04A"});
+				      layer.setStyle({color: "#beaed4"});
 				    else if (layer.feature.properties.type == "Marked On-Street")
-				      layer.setStyle({color: "#8BE04A"});
+				      layer.setStyle({color: "#377eb8"});
 				    else if (layer.feature.properties.type == "Shared Use Pathway")
-				      layer.setStyle({color: "#ff7f00"});
+				      layer.setStyle({color: "#F4DA25"});
 				    else if (layer.feature.properties.type == "Signed Route")
 				      layer.setStyle({color: "#064090"});
 						else if (layer.feature.properties.type == "Shared Lane")
@@ -236,16 +237,46 @@ function closeThisPopup() {
 	currentLayer.closePopup();
 }
 
-function addVote() {
-	var likes = currentLayer.feature.properties.likecount;
-	likes++;
-  var q = "UPDATE ebcplanning SET likecount = '" + likes + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
-  $.post("./php/callInsertProxy.php", {
-    qurl:q,
-    cache: false,
-    timeStamp: new Date().getTime()
-  });
+function addVote(value) {
+	if (value == 'like') {
+		var likes = currentLayer.feature.properties.likecount;
+		likes++;
+	  var q = "UPDATE ebcplanning SET likecount = '" + likes + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
+	  $.post("./php/callInsertProxy.php", {
+	    qurl:q,
+	    cache: false,
+	    timeStamp: new Date().getTime()
+	  });
+	}
+	else if (value == 'hate') {
+		var hates = currentLayer.feature.properties.hatecount;
+		hates++;
+	  var q = "UPDATE ebcplanning SET hatecount = '" + hates + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
+	  $.post("./php/callInsertProxy.php", {
+	    qurl:q,
+	    cache: false,
+	    timeStamp: new Date().getTime()
+	  });		
+	}
 	localStorage.setItem("ID" + currentLayer.feature.properties.cartodb_id, 1);
 	var popupText = createPopup(currentLayer);
 	currentLayer.bindPopup(popupText);
+}
+
+function addComment() {
+	var addedComment = prompt("Submit your comment to our database");
+	if (addedComment != null) {
+		var added = currentLayer.feature.properties.addedcomment;
+		if (added)
+		  added += "\nNewComment\n" + addedComment;
+		else
+			added = "NewComment\n" + addedComment;
+		currentLayer.feature.properties.addedcomment = added;
+	  var q = "UPDATE ebcplanning SET addedcomment = '" + added + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
+	  $.post("./php/callInsertProxy.php", {
+	    qurl:q,
+	    cache: false,
+	    timeStamp: new Date().getTime()
+	  });
+	}
 }
