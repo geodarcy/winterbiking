@@ -127,8 +127,14 @@ function createPopup(layer) {
       popupText += " selected='selected' ";
     popupText += ">Hazard</option></select></br>";
   }
-  popupText += "Comment: <textarea onchange='changeComment(this.value)' tabindex='1'>" + layer.feature.properties.comment + "</textarea><br>";
-  popupText += "Created By: <textarea onchange='changeCreator(this.value)' tabindex='2'>" + layer.feature.properties.creator + "</textarea><br>";
+	if (layer.feature.properties.comment)
+    popupText += "Comment: <textarea onchange='changeComment(this.value)' tabindex='1'>" + layer.feature.properties.comment + "</textarea><br>";
+	else
+		popupText += "Comment: <textarea onchange='changeComment(this.value)' tabindex='1' placeholder='What is it like out there?'></textarea><br>";
+	if (layer.feature.properties.creator)
+    popupText += "Created By: <textarea onchange='changeCreator(this.value)' tabindex='2'>" + layer.feature.properties.creator + "</textarea><br>";
+	else
+		popupText += "Created By: <textarea onchange='changeCreator(this.value)' tabindex='2' placeholder='Maybe let people know who you are? Your Twitter handle?'></textarea><br>";
   popupText += "Updated On: <b>" + layer.feature.properties.updated_at.toDateString() + "</b>";
   return popupText;
 }
