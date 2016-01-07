@@ -61,7 +61,8 @@ var popupText = layer.feature.properties.type + "</br>";
 }
 
 function createEditablePopup(layer) { // needs to be edited
-  var popupText = "Type Of Infrastructure: <select id='type' onchange='changeValue(this.value, this.id)'>";
+//  var popupText = "Type Of Infrastructure: <select id='type' onchange='changeValue(this.value, this.id)'>";
+  var popupText = "<select id='type' onchange='changeValue(this.value, this.id)'>";
   if (!layer.feature.properties.type)
     popupText += "<option disabled selected='selected'>Select Type Of Infrastructure</option><option";
   else
@@ -82,7 +83,8 @@ function createEditablePopup(layer) { // needs to be edited
     popupText += " selected='selected' ";
   popupText += ">Other</option></select></br>";
 
-  popupText += "Quality Of Infrastructure: <select id='quality' onchange='changeValue(this.value, this.id)'>";
+//  popupText += "Quality Of Infrastructure: <select id='quality' onchange='changeValue(this.value, this.id)'>";
+  popupText += "<select id='quality' onchange='changeValue(this.value, this.id)'>";
   if (!layer.feature.properties.quality)
     popupText += "<option disabled selected='selected'>Select Quality Of Infrastructure</option><option";
   else
@@ -100,7 +102,8 @@ function createEditablePopup(layer) { // needs to be edited
     popupText += " selected='selected' ";
   popupText += ">Other</option></select></br>";
 
-  popupText += "Political Cost: <select id='policost' onchange='changeValue(this.value, this.id)'>";
+//  popupText += "Political Cost: <select id='policost' onchange='changeValue(this.value, this.id)'>";
+  popupText += "<select id='policost' onchange='changeValue(this.value, this.id)'>";
   if (!layer.feature.properties.policost)
     popupText += "<option disabled selected='selected'>Select Political Cost</option><option";
   else
@@ -116,11 +119,11 @@ function createEditablePopup(layer) { // needs to be edited
   popupText += ">Low - the street is overbuilt, low disruption</option><option";
   if (layer.feature.properties.policost == 'Other')
     popupText += " selected='selected' ";
-  popupText += ">Other</option></select></br>";
+  popupText += ">Other</option></select></br></br>";
   if (layer.feature.properties.comments)
-    popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2'>" + layer.feature.properties.comments + "</textarea><br>";
+    popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2' style='height:80px'>" + layer.feature.properties.comments + "</textarea></br>";
 	else
-		popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2' placeholder='Add your comment...' rows='20'></textarea><br>";
+		popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2' placeholder='Add your comment...' style='height:80px'></textarea><br>";
 	popupText += "<input type=BUTTON value='Submit' name='mySubmit' onClick='closeThisPopup()'>";
 	return popupText;
 }
