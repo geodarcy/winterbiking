@@ -33,24 +33,30 @@ function initBikeJson (feature, layer) {
 }
 
 function createPopup(layer) { // needs to be edited
-  var popupText = "<table><tr><td>Type Of Infrastructure:</td><td><strong>" + layer.feature.properties.type + "</strong></td></tr>";
-
-  popupText += "<tr><td>Quality Of Infrastructure:</td><td><strong>" + layer.feature.properties.quality + "</strong></td></tr>";
-
-  popupText += "<tr><td>Political Cost:</td><td><strong>" + layer.feature.properties.policost + "</strong></td></tr>";
-
+//  var popupText = "<table><tr><td>Type Of Infrastructure:</td><td><strong>" + layer.feature.properties.type + "</strong></td></tr>";
+var popupText = layer.feature.properties.type + "</br>";
+//  popupText += "<tr><td>Quality Of Infrastructure:</td><td><strong>" + layer.feature.properties.quality + "</strong></td></tr>";
+  popupText += layer.feature.properties.quality + "</br>";
+//  popupText += "<tr><td>Political Cost:</td><td><strong>" + layer.feature.properties.policost + "</strong></td></tr>";
+  popupText += layer.feature.properties.policost + "</br>";
   if (layer.feature.properties.comments)
-    popupText += "<tr><td>Comments:</td><td><strong>" + layer.feature.properties.comments + "</strong></td></tr>";
+//    popupText += "<tr><td>Comments:</td><td><strong>" + layer.feature.properties.comments + "</strong></td></tr>";
+    popupText += "</br><strong>Comment:</strong></br>" + layer.feature.properties.comments + "</br></br>";
 	if (localStorage.getItem("ID" + layer.feature.properties.cartodb_id) != 1) {
-		popupText += "<tr><td><button value='like' onclick='addVote(value)'>I like it</button></td>";
-		popupText += "<td><button value='hate' onclick='addVote(value)'>I don't like it</button></td></tr>";
+//		popupText += "<tr><td><button value='like' onclick='addVote(value)'>I like it</button></td>";
+//		popupText += "<td><button value='hate' onclick='addVote(value)'>I don't like it</button></td></tr>";
+		popupText += "<button value='like' onclick='addVote(value)'>I like it</button>";
+		popupText += "<button value='hate' onclick='addVote(value)'>I don't like it</button></br>";
 	}
 	else {
-		popupText += "<tr><td><button disabled>I liked it</button></td>";
-		popupText += "<td><button disabled>I didn't like it</button></td></tr>";
+//		popupText += "<tr><td><button disabled>I liked it</button></td>";
+//		popupText += "<td><button disabled>I didn't like it</button></td></tr>";
+		popupText += "<button disabled>I liked it</button>";
+		popupText += "<button disabled>I didn't like it</button></br>";
 	}
-	popupText += "<tr><td><button onclick='addComment()'>Add comment</button></td></tr>";
-	popupText += "</table>";
+//	popupText += "<tr><td><button onclick='addComment()'>Add comment</button></td></tr>";
+//	popupText += "</table>";
+	popupText += "<button onclick='addComment()'>Add comment</button>";
 	return popupText;
 }
 
@@ -60,9 +66,9 @@ function createEditablePopup(layer) { // needs to be edited
     popupText += "<option disabled selected='selected'>Select Type Of Infrastructure</option><option";
   else
     popupText += "<option";
-  if (layer.feature.properties.type == 'Connection')
+  if (layer.feature.properties.type == 'Short Connection')
     popupText += " selected='selected' ";
-  popupText += ">Connection</option><option";
+  popupText += ">Short Connection</option><option";
   if (layer.feature.properties.type == 'Major route')
     popupText += " selected='selected' ";
   popupText += ">Major route</option><option";
@@ -114,13 +120,12 @@ function createEditablePopup(layer) { // needs to be edited
   if (layer.feature.properties.comments)
     popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2'>" + layer.feature.properties.comments + "</textarea><br>";
 	else
-		popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2' placeholder='Add your comment...'></textarea><br>";
+		popupText += "Comments:</br><textarea id='comments' onchange='changeValue(this.value, this.id)' tabindex='2' placeholder='Add your comment...' rows='20'></textarea><br>";
 	popupText += "<input type=BUTTON value='Submit' name='mySubmit' onClick='closeThisPopup()'>";
 	return popupText;
 }
 
-function styleMarkers (layer) { // needs to be edited
-//  console.log(layer);
+function styleMarkers (layer) {
   layer.setStyle({opacity: 0.9});
   if (layer.feature) {
     if (layer.feature.properties.quality == "Separated cycle track")
@@ -193,7 +198,7 @@ function changeValue(value, id) {
   });
 	var popupText = createEditablePopup(currentLayer);
 	currentLayer.bindPopup(popupText);
-	if (id == 'policost')
+	if (id == 'quality')
 		styleMarkers(currentLayer);
 }
 
@@ -203,7 +208,8 @@ function loadBikePaths() {
 		$.getJSON(url, function(data) {
 			var readLayer = L.geoJson(data, {
 				onEachFeature: function (feature, layer) {
-					var popupText = "Current infrastructure<br>Type: <strong>" + feature.properties.type + "</strong>";
+//					var popupText = "Current infrastructure<br>Type: <strong>" + feature.properties.type + "</strong>";
+					var popupText = "Current infrastructure<br><strong>" + feature.properties.type + "</strong>";
 					layer.bindPopup(popupText);
 					layer.setStyle({weight: 3,
 													dashArray: "5,5",
