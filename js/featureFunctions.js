@@ -60,9 +60,9 @@ function changeCondition(value) {
   });
   styleMarkers(currentLayer);
 	if (currentLayer.feature.geometry.type == "LineString")
-    currentLayer.setOpacity({opacity: 1, dashArray: null});
+    currentLayer.setStyle({opacity: 1, dashArray: null});
 	else if (currentLayer.feature.geometry.type == "Point")
-    currentLayer.setOpacity({opacity: 1});
+    currentLayer.setStyle({opacity: 1});
   var popupText = createPopup(currentLayer);
   currentLayer.bindPopup(popupText);
 }
@@ -77,9 +77,9 @@ function changeComment(value) {
     timeStamp: new Date().getTime()
   });
 	if (currentLayer.feature.geometry.type == "LineString")
-    currentLayer.setOpacity({opacity: 1, dashArray: null});
+    currentLayer.setStyle({opacity: 1, dashArray: null});
 	else if (currentLayer.feature.geometry.type == "Point")
-    currentLayer.setOpacity({opacity: 1});
+    currentLayer.setStyle({opacity: 1});
   var popupText = createPopup(currentLayer);
   currentLayer.bindPopup(popupText);
 }
@@ -94,15 +94,14 @@ function changeCreator(value) {
     timeStamp: new Date().getTime()
   });
 	if (currentLayer.feature.geometry.type == "LineString")
-    currentLayer.setOpacity({opacity: 1, dashArray: null});
+    currentLayer.setStyle({opacity: 1, dashArray: null});
 	else if (currentLayer.feature.geometry.type == "Point")
-    currentLayer.setOpacity({opacity: 1});
+    currentLayer.setStyle({opacity: 1});
   var popupText = createPopup(currentLayer);
   currentLayer.bindPopup(popupText);
 }
 
 function createPopup(layer) {
-  var myLayer = layer;
   var popupText = "Condition: <select id='condition' onchange='changeCondition(this.value)'>";
   if (!layer.feature.properties.condition)
     popupText += "<option disabled selected='selected'>Select a riding condition</option><option";

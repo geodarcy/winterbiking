@@ -15,6 +15,7 @@
     <script src="./js/featureFunctions.js" type="text/javascript"></script>
     <script src="./js/L.Control.Locate.min.js" type="text/javascript"></script>
     <script src="./js/L.SnowLayer.js" type="text/javascript"></script>
+    <script src="./js/leaflet-geoip.js" type="text/javascript"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   </head>
   <body>
@@ -33,12 +34,27 @@
       </div>
     </div> -->
     <script>
-//			var pos = L.GeoIP.getPosition();
-
       var map = L.map('map', {
         center: [53.53, -113.53],
-        zoom: 13
+        zoom: 11
       });
+			if ("geolocation" in navigator)
+			{
+				console.log("Trying navigator");
+				navigator.geolocation.getCurrentPosition(function(position) {map.panTo([position.coords.latitude, position.coords.longitude])});
+			}
+			else
+			{
+				try
+				{
+					console.log("Trying GeoIP");
+					L.GeoIP.centerMapOnPosition(map);
+				}
+				catch (e)
+				{
+					console.log(e);
+				}
+			}
 
       L.control.layers(baseMaps, overlays).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
