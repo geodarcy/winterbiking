@@ -1,7 +1,7 @@
 var currentLayer;
 
 function readData() {
-  var url = 'https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM ebcplanning';
+  var url = 'https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM ebcplanning WHERE NOT (policost is null and quality is null and type is null)';
   try {
 		$.getJSON(url, function(data) {
 			var readLayer = L.geoJson(data, {
@@ -32,13 +32,17 @@ function initBikeJson (feature, layer) {
   styleMarkers(tempLayer);
 }
 
-function createPopup(layer) { // needs to be edited
+function createPopup(layer) {
+	var popupText = "";
 //  var popupText = "<table><tr><td>Type Of Infrastructure:</td><td><strong>" + layer.feature.properties.type + "</strong></td></tr>";
-var popupText = layer.feature.properties.type + "</br>";
+  if (layer.feature.properties.type)
+		popupText = layer.feature.properties.type + "</br>";
 //  popupText += "<tr><td>Quality Of Infrastructure:</td><td><strong>" + layer.feature.properties.quality + "</strong></td></tr>";
-  popupText += layer.feature.properties.quality + "</br>";
+  if (layer.feature.properties.quality)
+		popupText += layer.feature.properties.quality + "</br>";
 //  popupText += "<tr><td>Political Cost:</td><td><strong>" + layer.feature.properties.policost + "</strong></td></tr>";
-  popupText += layer.feature.properties.policost + "</br>";
+  if (layer.feature.properties.policost)
+		popupText += layer.feature.properties.policost + "</br>";
   if (layer.feature.properties.comments)
 //    popupText += "<tr><td>Comments:</td><td><strong>" + layer.feature.properties.comments + "</strong></td></tr>";
     popupText += "</br><strong>Comment:</strong></br>" + layer.feature.properties.comments + "</br></br>";
@@ -229,6 +233,8 @@ function loadBikePaths() {
 				      layer.setStyle({color: "#064090"});
 						else if (layer.feature.properties.type == "Shared Lane")
 							layer.setStyle({color: "#984ea3"});
+						else if (layer.feature.properties.type == "Future Bike Route")
+							layer.setStyle({color: "#a6761d"});
 						else
 							layer.setStyle({color: "#aaaaaa"});
 				  }
