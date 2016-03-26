@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edmonton Bike Route Voting</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/ebc.css" />
+    <link rel="stylesheet" href="./css/L.Control.Locate.min.css" />
+    <script src="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <script src="./js/functions.js" type="text/javascript"></script>
+    <script src="./js/basemaps.js" type="text/javascript"></script>
+    <script src="./js/L.Control.Locate.min.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="header" class="shadow roundedCorners">
+        <div id="title">Edmonton Bike Route Planning</div>
+        <div id="subtitle">Selecting the favourite suggested bike routes in Edmonton.</div>
+        <a href="../about.html"><button id="aboutBox">About this site</button></a>
+        <a href="../moremaps.html"><button id="moreMapsBox">About this map</button></a>
+      </div>
+      <div id="map" class="roundedCorners shadow"></div>
+<!--      <div id="rightPane" class="roundedCorners shadow">
+      </div>
+      <div id="footer" class="shadow roundedCorners">
+        <div id="notes">Questions? Comments? Send e-mails <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#x64;&#97;&#114;&#x63;&#121;&#x40;&#x77;&#x69;&#x6e;&#x74;&#x65;&#114;&#x62;&#x69;&#107;&#x69;&#110;&#x67;&#46;&#99;&#x61;">here</a></div>
+      </div>
+    </div> -->
+    <script>
+			var maxCount;
+			getMaxCount();
+			var legend;
+			var likeCount = localStorage.getItem("likeCount");
+      var map = L.map('map', {
+        center: [53.53, -113.53],
+        zoom: 13,
+				maxBounds: [[53,-114],[54,-113]]
+      });
+      var bikeJson = new L.FeatureGroup();
+			map.addLayer(bikeJson);
+      var existingBikeJson = new L.FeatureGroup();
+			map.addLayer(existingBikeJson);
+			var overlays = {"Existing infrastructure": existingBikeJson, "Suggestions": bikeJson};
+
+      L.control.layers(baseMaps, overlays).addTo(map);
+      L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
+      var locateControl = L.control.locate({position: 'topright', locateOptions: {maxZoom: 14}}).addTo(map);
+      map.addLayer(cartoDB);
+			
+			readData();
+			loadBikePaths();
+      addLegend();
+			
+			var showAllData = L.control({position: 'topright'});
+			showAllData.onAdd = function (map) {
+				var div = L.DomUtil.create('div', 'showAllDataDiv');
+				div.innerHTML = '<i class="fa fa-globe" id="showAllDataDiv" title="Show all data"></i>';
+				return div;
+			};
+			showAllData.addTo(map);
+			document.getElementById('showAllDataDiv').addEventListener('click', function(){map.fitBounds(bikeJson.getBounds())}, false);
+    </script>
+  </body>
+</html>
