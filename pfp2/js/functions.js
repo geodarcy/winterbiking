@@ -82,21 +82,6 @@ function styleMarkers (layer) {
   }
 }
 
-/*function changeValue(value, id) {
-	console.log(id);
-  currentLayer.feature.properties[id] = value;
-  var q = "UPDATE rawpaths SET " + id + " = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
-  $.post("./php/callInsertProxy.php", {
-    qurl:q,
-    cache: false,
-    timeStamp: new Date().getTime()
-  });
-	var popupText = createEditablePopup(currentLayer);
-	currentLayer.bindPopup(popupText);
-	if (id == 'quality')
-		styleMarkers(currentLayer);
-}*/
-
 function loadBikePaths() {
   var url = './data/bikepaths.geojson';
   try {
@@ -134,10 +119,6 @@ function loadBikePaths() {
 		console.log("There are no data yet.");
 	}
 }
-
-/*function closeThisPopup() {
-	currentLayer.closePopup();
-}*/
 
 function addVote(value) {
 	var likes = bikeJson.getLayer(currentLayerID).feature.properties.likecount;
