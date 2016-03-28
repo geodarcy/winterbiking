@@ -42,7 +42,7 @@
       var bikeJson = new L.FeatureGroup();
 			map.addLayer(bikeJson);
       var existingBikeJson = new L.FeatureGroup();
-			map.addLayer(existingBikeJson);
+//			map.addLayer(existingBikeJson);
 			var overlays = {"Existing infrastructure": existingBikeJson, "Suggestions": bikeJson};
 
       L.control.layers(baseMaps, overlays).addTo(map);
