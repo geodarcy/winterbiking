@@ -1,7 +1,7 @@
 var currentLayerID;
 
 function readData() {
-  var url = 'https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM rawpaths WHERE NOT (policost is null and quality is null and type is null)';
+  var url = 'https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM rawpaths';
   try {
 		$.getJSON(url, function(data) {
 			var readLayer = L.geoJson(data, {
@@ -53,7 +53,12 @@ function createPopup(layer) {
 
 function styleMarkers (layer) {
   layer.setStyle({opacity: 0.9, weight: 4});
-  if (layer.feature) {
+  if (layer.feature.properties.likecount == 0)
+  {
+    layer.setStyle({color: "#CEEDFB"});
+    layer.feature.properties.colour = "#CEEDFB";
+  }
+  else if (layer.feature) {
     if (layer.feature.properties.likecount >= maxCount*3/4)
 		{
       layer.setStyle({color: "#006d2c"});
@@ -125,6 +130,8 @@ function addVote(value) {
 	if (value == 'like') {
 		likes = likes + 1;
 		localStorage.setItem("ID" + bikeJson.getLayer(currentLayerID).feature.properties.cartodb_id, 1);
+    if (likes > maxCount)
+      maxCount = likes;
 	}
 	else if (value == 'hate') {
 		likes = likes - 1;
@@ -139,7 +146,7 @@ function addVote(value) {
     cache: false,
     timeStamp: new Date().getTime()
   });
-	
+
 	if (!likeCount)
 	{
 		likeCount = 0;
@@ -153,6 +160,7 @@ function addVote(value) {
 	var popupText = createPopup(bikeJson.getLayer(currentLayerID));
 	bikeJson.getLayer(currentLayerID).bindPopup(popupText);
 	addLegend();
+  styleMarkers(bikeJson.getLayer(currentLayerID));
 }
 
 function addLegend() {
@@ -169,7 +177,7 @@ function addLegend() {
   labels.push('<svg width="18" height="12"> <line stroke-dasharray="5, 5" x1="0" y1="7" x2="18" y2="7" style="stroke:#377eb8;stroke-width:3"/></svg> Marked On-Street');
   labels.push('<svg width="18" height="12"> <line stroke-dasharray="5, 5" x1="0" y1="7" x2="18" y2="7" style="stroke:#F4DA25;stroke-width:3"/></svg> Shared Use Pathway');
 	labels.push('<svg width="18" height="12"> <line stroke-dasharray="5, 5" x1="0" y1="7" x2="18" y2="7" style="stroke:#a6761d;stroke-width:3"/></svg> Future Bike Route');
-	
+
 	if (legend)
 		legend._container.innerHTML = labels.join('<br><br>');
 	else
@@ -186,10 +194,10 @@ function addLegend() {
 
 function getMaxCount() {
 	var q = 'https://geodarcy.cartodb.com/api/v2/sql?q=SELECT MAX(likecount) FROM rawpaths';
-  $.get(q, function(data) {
+  $.getJSON(q, function(data) {
     maxCount = data.rows[0]["max"];
      }
-	);	
+	);
 }
 
 function addComment() {
