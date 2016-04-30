@@ -256,3 +256,37 @@ function addSegment() {
     timeStamp: new Date().getTime()
   });
 }
+
+
+
+function getMaxCount() {
+	var q = 'https://geodarcy.cartodb.com/api/v2/sql?q=SELECT MAX(count) FROM wbstrava';
+  $.getJSON(q, function(data) {
+    maxCount = data.rows[0]["max"], addLegend();
+     }
+	);
+}
+
+function addLegend() {
+  labels = [];
+/*        labels.push('Last week\'s efforts as a percentage of the all-time top 100'); // legend for ratios
+  labels.push('<i style="background:#1a9641"></i> > 80%');
+  labels.push('<i style="background:#a6d96a"></i> 60% - 80%');
+  labels.push('<i style="background:#ffffbf"></i> 40% - 60%');
+  labels.push('<i style="background:#fdae61"></i> 20% - 40%');
+  labels.push('<i style="background:#d7191c"></i> < 20%');
+  labels.push('<i style="background:#777777"></i> No recent data'); */
+  labels.push('<strong>Number of recent Strava riders</strong>'); // legend for counts
+  labels.push('<svg width="18" height="12"> <line x1="0" y1="7" x2="18" y2="7" style="stroke:#ca0020;stroke-width:3"/></svg> 100 - ' + maxCount); // + Math.ceil(maxCount*3/4) + ' - ' + maxCount);
+  labels.push('<svg width="18" height="12"> <line x1="0" y1="7" x2="18" y2="7" style="stroke:#f4a582;stroke-width:3"/></svg> 50 - 99'); // + Math.ceil(maxCount*2/4) + ' - ' + Math.floor(maxCount*3/4));
+  labels.push('<svg width="18" height="12"> <line x1="0" y1="7" x2="18" y2="7" style="stroke:#92c5de;stroke-width:3"/></svg> 10 - 49'); // + Math.ceil(maxCount*1/4) + ' - ' + Math.floor(maxCount*2/4));
+  labels.push('<svg width="18" height="12"> <line x1="0" y1="7" x2="18" y2="7" style="stroke:#0571b0;stroke-width:3"/></svg> 0 - 9'); // + Math.floor(maxCount*1/4));
+  labels.push('<svg width="18" height="12"> <line x1="0" y1="7" x2="18" y2="7" style="stroke:#636363;stroke-width:3"/></svg> Not recently ridden');
+  legend = L.control({position: 'bottomright'});
+  legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'info legend');
+    div.innerHTML = labels.join('<br><br>');
+    return div;
+  };
+  legend.addTo(map);
+}

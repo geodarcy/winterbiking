@@ -57,4 +57,5 @@ for segment in currentSegments:
   else:
     segmentMean = '0'
   cl.sql('UPDATE wbstrava SET ratio = ' + segmentMean + ' WHERE segment_id=' + str(segment))
+  cl.sql('UPDATE wbstrava SET count = ' + str(len(weekEffortsTimes)) + ' WHERE segment_id=' + str(segment))
   time.sleep(0.25)

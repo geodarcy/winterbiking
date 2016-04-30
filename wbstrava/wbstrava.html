@@ -31,6 +31,10 @@
       </div>
     </div> -->
     <script>
+      var maxCount;
+      getMaxCount();
+      var legend;
+
       var map = L.map('map', {
         center: [53.53, -113.53],
         zoom: 13
@@ -52,7 +56,7 @@
 					console.log(e);
 				}
 			}
-			
+
       var bikeJson;
       var url = "https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM wbstrava";
 			$.getJSON(url, function(data) {
@@ -62,7 +66,8 @@
 						layer.cartodb_id=feature.properties.cartodb_id;
 						popupText = "Strava segment ID: <a href='https://www.strava.com/segments/" + feature.properties.segment_id + "' target='_blank'>" + feature.properties.segment_id + "</a>";
 						if (feature.properties.ratio)
-						 popupText += "<br>This week's efforts are " + Math.round(feature.properties['ratio']*1000)/10 + "% of the top 100.";
+/*						 popupText += "<br>This week's efforts are " + Math.round(feature.properties['ratio']*1000)/10 + "% of the top 100."; */ // popup for ratios
+						 popupText += "<br>This segment was ridden " + feature.properties['count'] + " times recently.";  // popup for count
 						else
 							popupText += "<br>There were no efforts on this segment in the past week";
 						layer.bindPopup(popupText);
@@ -70,7 +75,7 @@
 				});
 			  bikeJson.addTo(map);
 			});
-			
+
 			var addSegmentControl = L.control({position: 'topright'});
 			addSegmentControl.onAdd = function (map) {
 				var div = L.DomUtil.create('div', 'info legend');
@@ -85,37 +90,37 @@
       map.addLayer(cartoDB);
 
 			function styleLayer(layer) {
-				layer.setStyle({weight: 3});
-				if (layer.feature.properties['ratio'] >= 0.80)
-				  layer.setStyle({opacity: 0.9, color: '#1a9641'});
+				layer.setStyle({weight: 3, opacity: 0.9});
+/*				if (layer.feature.properties['ratio'] >= 0.80) // style layers this way if doing ratios
+				  layer.setStyle({color: '#1a9641'});
 				else if (layer.feature.properties['ratio'] >= 0.60)
-				  layer.setStyle({opacity: 0.9, color: '#a6d96a'});
+				  layer.setStyle({color: '#a6d96a'});
 				else if (layer.feature.properties['ratio'] >= 0.40)
-				  layer.setStyle({opacity: 0.9, color: '#ffffbf'});
+				  layer.setStyle({color: '#ffffbf'});
 				else if (layer.feature.properties['ratio'] >= 0.2)
-				  layer.setStyle({opacity: 0.9, color: '#fdae61'});
+				  layer.setStyle({color: '#fdae61'});
 				else if (layer.feature.properties['ratio'] > 0.0)
-					layer.setStyle({opacity: 0.9, color: '#d7191c'});
+					layer.setStyle({color: '#d7191c'});
 				else
-					layer.setStyle({opacity: 0.5, color: '#777777'});
+					layer.setStyle({opacity: 0.5, color: '#777777'}); */
+        if (layer.feature.properties.count == 0) // style layers this way if using counts
+          layer.setStyle({color: "#636363"});
+        else if (layer.feature) {
+          if (layer.feature.properties.count >= 100)
+            layer.setStyle({color: "#ca0020"});
+          else if (layer.feature.properties.count >= 50)
+            layer.setStyle({color: "#f4a582"});
+          else if (layer.feature.properties.count >= 10)
+            layer.setStyle({color: "#92c5de"});
+          else if (layer.feature.properties.count > 0)
+            layer.setStyle({color: "#0571b0"});
+      		else
+      			layer.setStyle({color: "#636363"});
+        }
       }
 
-      var legend = L.control({position: 'bottomright'});
-      legend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'info legend'),
-          labels = [];
-        labels.push('Last week\'s efforts as a percentage of the all-time top 100');
-        labels.push('<i style="background:#1a9641"></i> > 80%');
-        labels.push('<i style="background:#a6d96a"></i> 60% - 80%');
-        labels.push('<i style="background:#ffffbf"></i> 40% - 60%');
-        labels.push('<i style="background:#fdae61"></i> 20% - 40%');
-        labels.push('<i style="background:#d7191c"></i> < 20%');
-        labels.push('<i style="background:#777777"></i> No recent data');
-        div.innerHTML = labels.join('<br><br>');
-        return div;
-      };
-      legend.addTo(map);
-			
+//      addLegend();
+
 			var showAllData = L.control({position: 'topright'});
 			showAllData.onAdd = function (map) {
 				var div = L.DomUtil.create('div', 'showAllDataDiv');
