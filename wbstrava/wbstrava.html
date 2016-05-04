@@ -19,7 +19,7 @@
     <div id="wrapper">
       <div id="header" class="shadow roundedCorners">
         <div id="title">Winter Biking</div>
-        <div id="subtitle">Comparing last week's Strava efforts to the top 100 on each segment's leaderboard.</div>
+        <div id="subtitle">Counting who's been riding Strava segments.</div>
         <a href="../about.html"><button id="aboutBox">About this site</button></a>
         <a href="../moremaps.html"><button id="moreMapsBox">About this map</button></a>
       </div>
@@ -79,7 +79,7 @@
 			var addSegmentControl = L.control({position: 'topright'});
 			addSegmentControl.onAdd = function (map) {
 				var div = L.DomUtil.create('div', 'info legend');
-				div.innerHTML = 'Enter Strava segment ID number:<br><input id="segmentID" type="text" placeholder="1234567"><br><button onclick="addSegment()">Submit</button><br>(New segments will appear when ratios next updated.)';
+				div.innerHTML = 'Enter Strava segment ID number:<br><input id="segmentID" type="text" placeholder="1234567"><br><button onclick="addSegment()">Submit</button><br>(New segments will appear when numbers next updated.)';
 				return div;
 			};
 			addSegmentControl.addTo(map);
@@ -104,7 +104,7 @@
 				else
 					layer.setStyle({opacity: 0.5, color: '#777777'}); */
         if (layer.feature.properties.count == 0) // style layers this way if using counts
-          layer.setStyle({color: "#636363"});
+          layer.setStyle({color: "#636363", weight: 0.5});
         else if (layer.feature) {
           if (layer.feature.properties.count >= 100)
             layer.setStyle({color: "#ca0020"});
@@ -115,7 +115,7 @@
           else if (layer.feature.properties.count > 0)
             layer.setStyle({color: "#0571b0"});
       		else
-      			layer.setStyle({color: "#636363"});
+      			layer.setStyle({color: "#636363", weight: 0.5});
         }
       }
 
