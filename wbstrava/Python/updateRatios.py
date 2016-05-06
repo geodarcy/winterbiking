@@ -25,15 +25,15 @@ currentSegments = [x['segment_id'] for x in queryResult['rows']]
 for id in currentSegments:
   try:
     segmentGeojson = PolylineCodec().decode(client.get_segment(id).map.polyline)
+    flippedGeojson = [[x[1], x[0]] for x in segmentGeojson]
+    inputGeojson = '{"coordinates": ' + str(flippedGeojson) + ', "type": "LineString", "crs":{"type":"name","properties":{"name":"EPSG:4326"}}}'
+    cl.sql('UPDATE wbstrava SET the_geom = ST_GeomFromGeoJSON(\'' + inputGeojson + '\') WHERE segment_id=' + str(id))
   except Exception as e:
     if "Not Found" in e.message:
       cl.sql('DELETE FROM wbstrava WHERE segment_id= ' + str(id))
       print("Deleted Strava ID: {}".format(id))
     else:
       print("Something's wrong with Strava ID: {}".format(id))
-  flippedGeojson = [[x[1], x[0]] for x in segmentGeojson]
-  inputGeojson = '{"coordinates": ' + str(flippedGeojson) + ', "type": "LineString", "crs":{"type":"name","properties":{"name":"EPSG:4326"}}}'
-  cl.sql('UPDATE wbstrava SET the_geom = ST_GeomFromGeoJSON(\'' + inputGeojson + '\') WHERE segment_id=' + str(id))
 
 ## get list of segments already in CartoDB
 queryResult = cl.sql('select segment_id from wbstrava')

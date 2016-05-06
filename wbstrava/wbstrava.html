@@ -79,7 +79,7 @@
 			var addSegmentControl = L.control({position: 'topright'});
 			addSegmentControl.onAdd = function (map) {
 				var div = L.DomUtil.create('div', 'info legend');
-				div.innerHTML = 'Enter Strava segment ID number:<br><input id="segmentID" type="text" placeholder="1234567"><br><button onclick="addSegment()">Submit</button><br>(New segments will appear when numbers next updated.)';
+				div.innerHTML = 'Enter Strava segment ID number:<br><input id="segmentID" type="text" placeholder="1234567"><br><button onclick="addSegment()">Submit</button><button onclick="stravaHelp()">Segment ID?</button><br>(New segments will appear when numbers next updated.)';
 				return div;
 			};
 			addSegmentControl.addTo(map);

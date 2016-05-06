@@ -290,3 +290,7 @@ function addLegend() {
   };
   legend.addTo(map);
 }
+
+function stravaHelp() {
+  alert("The segment ID is the 7 or so digits at the end of a segment's URL. Click on the link in any popup for an example.");
+}
