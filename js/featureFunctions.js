@@ -49,60 +49,23 @@ function insertNewLayer(layer) {
   });
 }
 
-function changeCondition(value) {
-  currentLayer.feature.properties.condition = value;
-  currentLayer.feature.properties.updated_at = new Date();
-  var q = "UPDATE winterbiking SET condition = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
+function changeValue(value, id) {
+	console.log(id);
+  currentLayer.feature.properties[id] = value;
+  var q = "UPDATE winterbiking SET " + id + " = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
   $.post("./php/callInsertProxy.php", {
     qurl:q,
     cache: false,
     timeStamp: new Date().getTime()
   });
-  styleMarkers(currentLayer);
-	if (currentLayer.feature.geometry.type == "LineString")
-    currentLayer.setStyle({opacity: 1, dashArray: null});
-	else if (currentLayer.feature.geometry.type == "Point")
-    currentLayer.setStyle({opacity: 1});
-  var popupText = createPopup(currentLayer);
-  currentLayer.bindPopup(popupText);
-}
-
-function changeComment(value) {
-  currentLayer.feature.properties.comment = value;
-  currentLayer.feature.properties.updated_at = new Date();
-  var q = "UPDATE winterbiking SET comment = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
-  $.post("./php/callInsertProxy.php", {
-    qurl:q,
-    cache: false,
-    timeStamp: new Date().getTime()
-  });
-	if (currentLayer.feature.geometry.type == "LineString")
-    currentLayer.setStyle({opacity: 1, dashArray: null});
-	else if (currentLayer.feature.geometry.type == "Point")
-    currentLayer.setStyle({opacity: 1});
-  var popupText = createPopup(currentLayer);
-  currentLayer.bindPopup(popupText);
-}
-
-function changeCreator(value) {
-  currentLayer.feature.properties.creator = value;
-  currentLayer.feature.properties.updated_at = new Date();
-  var q = "UPDATE winterbiking SET creator = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
-  $.post("./php/callInsertProxy.php", {
-    qurl:q,
-    cache: false,
-    timeStamp: new Date().getTime()
-  });
-	if (currentLayer.feature.geometry.type == "LineString")
-    currentLayer.setStyle({opacity: 1, dashArray: null});
-	else if (currentLayer.feature.geometry.type == "Point")
-    currentLayer.setStyle({opacity: 1});
-  var popupText = createPopup(currentLayer);
-  currentLayer.bindPopup(popupText);
+	var popupText = createPopup(currentLayer);
+//	currentLayer.bindPopup(popupText);
+	if (id == 'condition')
+		styleMarkers(currentLayer);
 }
 
 function createPopup(layer) {
-  var popupText = "Condition: <select id='condition' onchange='changeCondition(this.value)'>";
+  var popupText = "Condition: <select id='condition' onchange='changeValue(this.value, this.id)'>";
   if (!layer.feature.properties.condition)
     popupText += "<option disabled selected='selected'>Select a riding condition</option><option";
   else
@@ -127,13 +90,13 @@ function createPopup(layer) {
     popupText += ">Hazard</option></select></br>";
   }
 	if (layer.feature.properties.comment)
-    popupText += "Comment: <textarea onchange='changeComment(this.value)' tabindex='1'>" + layer.feature.properties.comment + "</textarea><br>";
+    popupText += "Comment: <textarea id='comment' onchange='changeValue(this.value, this.id)'>" + layer.feature.properties.comment + "</textarea><br>";
 	else
-		popupText += "Comment: <textarea onchange='changeComment(this.value)' tabindex='1' placeholder='What is it like out there?'></textarea><br>";
+		popupText += "Comment: <textarea id='comment' onchange='changeValue(this.value, this.id)' placeholder='What is it like out there?'></textarea><br>";
 	if (layer.feature.properties.creator)
-    popupText += "Created By: <textarea onchange='changeCreator(this.value)' tabindex='2'>" + layer.feature.properties.creator + "</textarea><br>";
+    popupText += "Created By: <textarea id='creator' onchange='changeValue(this.value, this.id)'>" + layer.feature.properties.creator + "</textarea><br>";
 	else
-		popupText += "Created By: <textarea onchange='changeCreator(this.value)' tabindex='2' placeholder='Maybe let people know who you are? Your Twitter handle?'></textarea><br>";
+		popupText += "Created By: <textarea id='creator' onchange='changeValue(this.value, this.id)' placeholder='Maybe let people know who you are? Your Twitter handle?'></textarea><br>";
   popupText += "Updated On: <b>" + layer.feature.properties.updated_at.toDateString() + "</b>";
   return popupText;
 }
@@ -186,14 +149,6 @@ function fadeOldLines (layer) {
 		  layer.setStyle({dashArray: dashString});
 	  }
 		layer.setStyle({opacity: (30-daysDiff)/30});
-/*    if (daysDiff <= 7)
-      layer.setStyle({opacity: 1});
-    else if (daysDiff <= 14)
-      layer.setStyle({opacity: 0.5});
-    else if (daysDiff <= 21)
-      layer.setStyle({opacity: 0.25});
-    else
-      layer.setStyle({opacity: 0.1}); */
   }
 }
 
