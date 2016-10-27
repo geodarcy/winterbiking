@@ -38,13 +38,13 @@
         center: [53.53, -113.53],
         zoom: 12
       });
-			if ("geolocation" in navigator)
+/*			if ("geolocation" in navigator)
 			{
 				console.log("Trying navigator");
 				navigator.geolocation.getCurrentPosition(function(position) {map.panTo([position.coords.latitude, position.coords.longitude])});
 			}
 			else
-			{
+			{ */
 				try
 				{
 					console.log("Trying GeoIP");
@@ -54,11 +54,11 @@
 				{
 					console.log(e);
 				}
-			}
+//			}
 
       L.control.layers(baseMaps, overlays).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
-      var locateControl = L.control.locate({position: 'topright', locateOptions: {maxZoom: 14}}).addTo(map);
+//      var locateControl = L.control.locate({position: 'topright', locateOptions: {maxZoom: 14}}).addTo(map);
 
       map.addLayer(cartoDB);
 
@@ -106,7 +106,7 @@
         return div;
       };
       legend.addTo(map);
-			
+
 			var showAllData = L.control({position: 'topright'});
 			showAllData.onAdd = function (map) {
 				var div = L.DomUtil.create('div', 'showAllDataDiv');

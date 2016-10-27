@@ -39,13 +39,13 @@
         center: [53.53, -113.53],
         zoom: 13
       });
-			if ("geolocation" in navigator)
+	/*		if ("geolocation" in navigator)
 			{
 				console.log("Trying navigator");
 				navigator.geolocation.getCurrentPosition(function(position) {map.panTo([position.coords.latitude, position.coords.longitude])});
 			}
 			else
-			{
+			{ */
 				try
 				{
 					console.log("Trying GeoIP");
@@ -55,7 +55,7 @@
 				{
 					console.log(e);
 				}
-			}
+//			}
 
       var bikeJson;
       var url = "https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM wbstrava";
@@ -86,7 +86,7 @@
 
       L.control.layers(baseMaps).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
-      var locateControl = L.control.locate({position: 'topright', locateOptions: {maxZoom: 14}}).addTo(map);
+//      var locateControl = L.control.locate({position: 'topright', locateOptions: {maxZoom: 14}}).addTo(map);
       map.addLayer(cartoDB);
 
 			function styleLayer(layer) {
