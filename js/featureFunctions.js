@@ -59,7 +59,7 @@ function changeValue(value, id) {
     timeStamp: new Date().getTime()
   });
 	var popupText = createPopup(currentLayer);
-//	currentLayer.bindPopup(popupText);
+	currentLayer.bindPopup(popupText);
 	if (id == 'condition')
 		styleMarkers(currentLayer);
 }
