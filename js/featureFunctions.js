@@ -249,3 +249,122 @@ function addLegend() {
 function stravaHelp() {
   alert("The segment ID is the 7 or so digits at the end of a segment's URL. Click on the link in any popup for an example.");
 }
+
+function readBBData() {
+  var url = 'https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM begbuttonall WHERE the_geom IS NOT null';
+  try {
+    $.getJSON(url, function(data) {
+      var bbJson = L.geoJson(data, {
+        pointToLayer: function (feature, latlng) {
+          return L.circleMarker(latlng);
+        },
+        onEachFeature: initBBJson
+      });
+    });
+  }
+  catch(err) {
+    console.log("There are no data yet.");
+  }
+}
+
+function initBBJson (feature, layer) {
+  var tempLayer = layer;
+  tempLayer.feature = layer.feature;
+  tempLayer.feature.properties.updated_at = new Date(tempLayer.feature.properties.updated_at);
+  var popupText = createBBPopup(tempLayer);
+  tempLayer.bindPopup(popupText);
+  tempLayer.on('popupopen', function(){currentLayer = tempLayer;});
+  styleBBMarkers(tempLayer);
+  drawnItems.addLayer(tempLayer);
+}
+
+function createBBPopup(layer) {
+  var popupText = "Average wait time: " + Math.round(layer.feature.properties.waittime) + " seconds";
+  popupText += "</br><button id='addtime' onclick='changeBBValue(this.value, this.id)'>Add your wait time</button>";
+  return popupText;
+}
+
+function changeBBValue(value, id) {
+  var waittime = prompt("Please enter your wait time in seconds:");
+  var oldTotalWait = currentLayer.feature.properties.totalwait;
+  var oldCount = currentLayer.feature.properties.count;
+  var totalWait = parseInt(waittime) + oldTotalWait;
+  var count = oldCount + 1;
+  currentLayer.feature.properties.totalwait = totalWait;
+  currentLayer.feature.properties.count = count;
+  currentLayer.feature.properties.waittime = totalWait / count;
+  console.log(currentLayer.feature.properties.waittime);
+  var q = "UPDATE begbuttonall SET totalwait = " + totalWait + ", count = " + count + ", waittime = " + totalWait / count + " WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
+  $.post("../php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
+  });
+  var popupText = createBBPopup(currentLayer);
+  currentLayer.bindPopup(popupText);
+  currentLayer.closePopup();
+  currentLayer.openPopup();
+  styleBBMarkers(currentLayer);
+}
+
+function insertBBNewLayer(layer) {
+  var insertGeoJSON = layer.toGeoJSON();
+  var q = 'INSERT INTO begbuttonall (the_geom) VALUES (ST_SetSRID(ST_AsText(ST_GeomFromGeoJSON(\'' + JSON.stringify(insertGeoJSON.geometry) + '\')),4326)) RETURNING cartodb_id';
+  $.post("../php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
+  }, function(data) {
+    var foo = JSON.parse(data);
+//    console.log(insertGeoJSON);
+    insertGeoJSON.properties.cartodb_id = foo.rows[0]["cartodb_id"];
+    insertGeoJSON.properties.updated_at = new Date();
+    insertGeoJSON.properties.totalwait = 0;
+    insertGeoJSON.properties.count = 0;
+    insertGeoJSON.properties.waittime = 0;
+    L.geoJson(insertGeoJSON, {
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng);
+      },
+      onEachFeature: function (feature, layer) {
+				initBBJson(feature,layer);
+				layer.openPopup();
+			}
+    });
+  });
+}
+
+function deleteBBLayers(layer) {
+  drawnItems.removeLayer(layer);
+  var q = "DELETE FROM begbuttonall WHERE cartodb_id = " + layer.feature.properties.cartodb_id;
+  $.post("../php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
+  });
+}
+
+function editBBLayers(layer) {
+  var editGeoJSON = layer.toGeoJSON();
+  var q = 'UPDATE begbuttonall SET the_geom = (ST_SetSRID(ST_AsText(ST_GeomFromGeoJSON(\'' + JSON.stringify(editGeoJSON.geometry) + '\')),4326)) WHERE cartodb_id = ' + layer.feature.properties.cartodb_id;
+  $.post("../php/callInsertProxy.php", {
+    qurl:q,
+    cache: false,
+    timeStamp: new Date().getTime()
+  });
+}
+
+function styleBBMarkers (layer) {
+  var waitTime = parseInt(layer.feature.properties.waittime);
+  if (waitTime < 10) {
+    var styleColor = "#1a9641";
+  } else if (waitTime > 60) {
+    var styleColor = "#d7191c";
+  } else {
+    var styleColor = "#fdae61";
+  }
+  layer.setStyle({fillColor: styleColor,
+                  fillOpacity: 0.8,
+                  weight: 0
+  })
+}
