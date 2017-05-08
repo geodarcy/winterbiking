@@ -31,6 +31,9 @@
       </div>
     </div>
     <script>
+      var maxWait = getMaxWait();
+      var legend;
+
       var map = L.map('map', {
         center: [53.53, -113.53],
         zoom: 12,
@@ -71,19 +74,6 @@
       map.on('draw:edited', function (e) {
         e.layers.eachLayer(editBBLayers);
       });
-
-      var legend = L.control({position: 'bottomright'});
-      legend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'info legend'),
-          labels = [];
-        labels.push('Average wait time')
-        labels.push('<i style="background:#0F7001"></i> Less than 10 seconds');
-        labels.push('<i style="background:#EE9D08"></i>');
-        labels.push('<i style="background:#ff0000"></i> More than 60 seconds');
-        div.innerHTML = labels.join('<br><br>');
-        return div;
-      };
-      legend.addTo(map);
 
 			var showAllData = L.control({position: 'topright'});
 			showAllData.onAdd = function (map) {

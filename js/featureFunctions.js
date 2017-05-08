@@ -212,8 +212,6 @@ function addSegment() {
   });
 }
 
-
-
 function getMaxCount() {
 	var q = 'https://geodarcy.cartodb.com/api/v2/sql?q=SELECT MAX(count) FROM wbstrava';
   $.getJSON(q, function(data) {
@@ -367,4 +365,29 @@ function styleBBMarkers (layer) {
                   fillOpacity: 0.8,
                   weight: 0
   })
+}
+
+function getMaxWait() {
+	var q = 'https://geodarcy.cartodb.com/api/v2/sql?q=SELECT MAX(waittime) FROM begbuttonall';
+  $.getJSON(q, function(data) {
+    return data.rows[0]["max"], addBBLegend();
+     }
+	);
+}
+
+function addBBLegend() {
+  labels = [];
+  labels.push('Average wait time')
+  labels.push('<i style="background:#00C800"></i> Lights change immediately');
+  labels.push('<i style="background:#64C800"></i>');
+  labels.push('<i style="background:#C8C800"></i>');
+  labels.push('<i style="background:#C86400"></i>');
+  labels.push('<i style="background:#C80000"></i>' + maxWait + 's wait time');
+  legend = L.control({position: 'bottomright'});
+  legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'info legend');
+    div.innerHTML = labels.join('<br><br>');
+    return div;
+  };
+  legend.addTo(map);
 }
