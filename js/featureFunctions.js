@@ -354,12 +354,16 @@ function editBBLayers(layer) {
 
 function styleBBMarkers (layer) {
   var waitTime = parseInt(layer.feature.properties.waittime);
-  if (waitTime < 10) {
+  if (waitTime < maxWait * 0.2) {
     var styleColor = "#1a9641";
-  } else if (waitTime > 60) {
-    var styleColor = "#d7191c";
-  } else {
+  } else if (waitTime < maxWait * 0.4) {
+    var styleColor = "#a6d96a";
+  } else if (waitTime < maxWait * 0.6) {
+    var styleColor = "#E1E100";
+  } else if (waitTime < maxWait * 0.8) {
     var styleColor = "#fdae61";
+  } else {
+    var styleColor = "#d7191c";
   }
   layer.setStyle({fillColor: styleColor,
                   fillOpacity: 0.8,
@@ -370,7 +374,7 @@ function styleBBMarkers (layer) {
 function getMaxWait() {
 	var q = 'https://geodarcy.cartodb.com/api/v2/sql?q=SELECT MAX(waittime) FROM begbuttonall';
   $.getJSON(q, function(data) {
-    return data.rows[0]["max"], addBBLegend();
+    maxWait = data.rows[0]["max"], addBBLegend();
      }
 	);
 }
@@ -378,11 +382,11 @@ function getMaxWait() {
 function addBBLegend() {
   labels = [];
   labels.push('Average wait time')
-  labels.push('<i style="background:#00C800"></i> Lights change immediately');
-  labels.push('<i style="background:#64C800"></i>');
-  labels.push('<i style="background:#C8C800"></i>');
-  labels.push('<i style="background:#C86400"></i>');
-  labels.push('<i style="background:#C80000"></i>' + maxWait + 's wait time');
+  labels.push('<i style="background:#1a9641"></i> Less than ' + Math.round(maxWait) * 0.2 + ' seconds');
+  labels.push('<i style="background:#a6d96a"></i>');
+  labels.push('<i style="background:#E1E100"></i>');
+  labels.push('<i style="background:#fdae61"></i>');
+  labels.push('<i style="background:#d7191c"></i> More than ' + Math.round(maxWait) * 0.8 + ' seconds');
   legend = L.control({position: 'bottomright'});
   legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'info legend');
