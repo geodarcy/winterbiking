@@ -382,11 +382,11 @@ function getMaxWait() {
 function addBBLegend() {
   labels = [];
   labels.push('Average wait time')
-  labels.push('<i style="background:#1a9641"></i> Less than ' + Math.round(maxWait) * 0.2 + ' seconds');
+  labels.push('<i style="background:#1a9641"></i> Lights change right away');
   labels.push('<i style="background:#a6d96a"></i>');
   labels.push('<i style="background:#E1E100"></i>');
   labels.push('<i style="background:#fdae61"></i>');
-  labels.push('<i style="background:#d7191c"></i> More than ' + Math.round(maxWait) * 0.8 + ' seconds');
+  labels.push('<i style="background:#d7191c"></i> Avg wait up to ' + Math.round(maxWait) + ' seconds');
   legend = L.control({position: 'bottomright'});
   legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'info legend');
