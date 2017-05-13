@@ -354,8 +354,8 @@ function editBBLayers(layer) {
 
 function styleBBMarkers (layer) {
   var waitTime = parseInt(layer.feature.properties.waittime);
-  if (waitTime < maxWait * 0.2) {
-    var styleColor = "#1a9641";
+/*  if (waitTime < maxWait * 0.2) {
+    var styleColor = "rgb(255,0,255)";
   } else if (waitTime < maxWait * 0.4) {
     var styleColor = "#a6d96a";
   } else if (waitTime < maxWait * 0.6) {
@@ -364,7 +364,13 @@ function styleBBMarkers (layer) {
     var styleColor = "#fdae61";
   } else {
     var styleColor = "#d7191c";
+  }*/
+  if (waitTime < maxWait / 2){
+    var styleColor = "rgb(" + Math.round(waitTime / maxWait * 480) + ",240,90)";
+  }  else {
+    var styleColor = "rgb(240," + Math.round(480 - (480 * waitTime / maxWait)) + ",90)";
   }
+  console.log(waitTime, styleColor);
   layer.setStyle({fillColor: styleColor,
                   fillOpacity: 0.8,
                   weight: 0
@@ -382,11 +388,11 @@ function getMaxWait() {
 function addBBLegend() {
   labels = [];
   labels.push('Average wait time')
-  labels.push('<i style="background:#1a9641"></i> Lights change right away');
-  labels.push('<i style="background:#a6d96a"></i>');
-  labels.push('<i style="background:#E1E100"></i>');
-  labels.push('<i style="background:#fdae61"></i>');
-  labels.push('<i style="background:#d7191c"></i> Avg wait up to ' + Math.round(maxWait) + ' seconds');
+  labels.push('<i style="background:rgb(0,240,90)"></i> Lights change right away');
+  labels.push('<i style="background:rgb(120,240,90)"></i>');
+  labels.push('<i style="background:rgb(240,240,90)"></i>');
+  labels.push('<i style="background:rgb(240,120,90)"></i>');
+  labels.push('<i style="background:rgb(240,0,90)"></i> Avg wait up to ' + Math.round(maxWait) + ' seconds');
   legend = L.control({position: 'bottomright'});
   legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'info legend');
