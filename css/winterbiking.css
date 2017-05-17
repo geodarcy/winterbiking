@@ -215,3 +215,12 @@
   background-color: #FFF;
   padding:5px;
 }
+
+#circle {
+ width: 18px;
+ height: 18px;
+ -webkit-border-radius: 9px;
+ -moz-border-radius: 9px;
+ border-radius: 9px;
+ background: red;
+}

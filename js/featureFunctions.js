@@ -354,26 +354,25 @@ function editBBLayers(layer) {
 
 function styleBBMarkers (layer) {
   var waitTime = parseInt(layer.feature.properties.waittime);
-/*  if (waitTime < maxWait * 0.2) {
-    var styleColor = "rgb(255,0,255)";
-  } else if (waitTime < maxWait * 0.4) {
-    var styleColor = "#a6d96a";
-  } else if (waitTime < maxWait * 0.6) {
-    var styleColor = "#E1E100";
-  } else if (waitTime < maxWait * 0.8) {
-    var styleColor = "#fdae61";
+  if (waitTime < 10) {
+    var styleColor = "#ffffb2";
+  } else if (waitTime < 20) {
+    var styleColor = "#fed976";
+  } else if (waitTime < 30) {
+    var styleColor = "#feb24c";
+  } else if (waitTime < 40) {
+    var styleColor = "#fd8d3c";
+  } else if (waitTime < 50) {
+    var styleColor = "#fc4e2a";
+  } else if (waitTime < 60) {
+    var styleColor = "#e31a1c";
   } else {
-    var styleColor = "#d7191c";
-  }*/
-  if (waitTime < maxWait / 2){
-    var styleColor = "rgb(" + Math.round(waitTime / maxWait * 480) + ",240,90)";
-  }  else {
-    var styleColor = "rgb(240," + Math.round(480 - (480 * waitTime / maxWait)) + ",90)";
+    var styleColor = "#b10026";
   }
-  console.log(waitTime, styleColor);
   layer.setStyle({fillColor: styleColor,
-                  fillOpacity: 0.8,
-                  weight: 0
+                  fillOpacity: 1,
+                  weight: 1,
+                  color: "#b10026"
   })
 }
 
@@ -388,11 +387,13 @@ function getMaxWait() {
 function addBBLegend() {
   labels = [];
   labels.push('Average wait time')
-  labels.push('<i style="background:rgb(0,240,90)"></i> Lights change right away');
-  labels.push('<i style="background:rgb(120,240,90)"></i>');
-  labels.push('<i style="background:rgb(240,240,90)"></i>');
-  labels.push('<i style="background:rgb(240,120,90)"></i>');
-  labels.push('<i style="background:rgb(240,0,90)"></i> Avg wait up to ' + Math.round(maxWait) + ' seconds');
+  labels.push('<i id="circle" style="background:#ffffb2"></i> < 10 seconds');
+  labels.push('<i id="circle"  style="background:#fed976"></i> 10-20 seconds');
+  labels.push('<i id="circle"  style="background:#feb24c"></i> 20-30 seconds');
+  labels.push('<i id="circle"  style="background:#fd8d3c"></i> 30-40 seconds');
+  labels.push('<i id="circle"  style="background:#fc4e2a"></i> 40-50 seconds');
+  labels.push('<i id="circle"  style="background:#e31a1c"></i> 50-60 seconds');
+  labels.push('<i id="circle"  style="background:#b10026"></i> 60-' + Math.round(maxWait) + ' seconds');
   legend = L.control({position: 'bottomright'});
   legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'info legend');
