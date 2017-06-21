@@ -386,14 +386,14 @@ function getMaxWait() {
 
 function addBBLegend() {
   labels = [];
-  labels.push('Average wait time')
-  labels.push('<i id="circle" style="background:#ffffb2"></i> < 10 seconds');
-  labels.push('<i id="circle"  style="background:#fed976"></i> 10-20 seconds');
-  labels.push('<i id="circle"  style="background:#feb24c"></i> 20-30 seconds');
-  labels.push('<i id="circle"  style="background:#fd8d3c"></i> 30-40 seconds');
-  labels.push('<i id="circle"  style="background:#fc4e2a"></i> 40-50 seconds');
-  labels.push('<i id="circle"  style="background:#e31a1c"></i> 50-60 seconds');
-  labels.push('<i id="circle"  style="background:#b10026"></i> 60-' + Math.round(maxWait) + ' seconds');
+  labels.push('Average wait time</br>(seconds)')
+  labels.push('<i id="circle" style="background:#ffffb2"></i> < 10');
+  labels.push('<i id="circle"  style="background:#fed976"></i> 10-20');
+  labels.push('<i id="circle"  style="background:#feb24c"></i> 20-30');
+  labels.push('<i id="circle"  style="background:#fd8d3c"></i> 30-40');
+  labels.push('<i id="circle"  style="background:#fc4e2a"></i> 40-50');
+  labels.push('<i id="circle"  style="background:#e31a1c"></i> 50-60');
+  labels.push('<i id="circle"  style="background:#b10026"></i> 60-' + Math.round(maxWait));
   legend = L.control({position: 'bottomright'});
   legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'info legend');
