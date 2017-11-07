@@ -50,7 +50,7 @@ function insertNewLayer(layer) {
 }
 
 function changeValue(value, id) {
-	console.log(id);
+//	console.log(id);
   currentLayer.feature.properties[id] = value;
   var q = "UPDATE winterbiking SET " + id + " = '" + value + "' WHERE cartodb_id = " + currentLayer.feature.properties.cartodb_id;
   $.post("./php/callInsertProxy.php", {
@@ -60,8 +60,7 @@ function changeValue(value, id) {
   });
 	var popupText = createPopup(currentLayer);
 	currentLayer.bindPopup(popupText);
-	if (id == 'condition')
-		styleMarkers(currentLayer);
+	styleMarkers(currentLayer);
 }
 
 function createPopup(layer) {
@@ -130,6 +129,10 @@ function styleMarkers (layer) {
       layer.setIcon(hazardIcon);
     if (layer.feature.geometry.type == "Point" & layer.feature.properties.condition == "Caution")
       layer.setIcon(cautionIcon);
+	  if (layer.feature.geometry.type == "LineString")
+	    fadeOldLines(layer);
+	  if (layer.feature.geometry.type == "Point")
+	    fadeOldPoints(layer);		
   }
 }
 
