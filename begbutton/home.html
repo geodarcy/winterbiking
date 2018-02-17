@@ -39,7 +39,7 @@
         center: [53.53, -113.53],
         zoom: 12
       });
-			try
+/*			try
 			{
 				console.log("Trying GeoIP");
 				L.GeoIP.centerMapOnPosition(map);
@@ -47,7 +47,7 @@
 			catch (e)
 			{
 				console.log(e);
-			}
+			}*/
 
       L.control.layers(baseMaps, overlays).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);

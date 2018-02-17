@@ -44,7 +44,7 @@
 				navigator.geolocation.getCurrentPosition(function(position) {map.panTo([position.coords.latitude, position.coords.longitude])});
 			}
 			else
-			{ */
+			{ 
 				try
 				{
 					console.log("Trying GeoIP");
@@ -54,7 +54,7 @@
 				{
 					console.log(e);
 				}
-//			}
+//			}*/
 
       L.control.layers(baseMaps, overlays).addTo(map);
       L.control.scale({imperial: false, maxWidth: 300}).addTo(map);
