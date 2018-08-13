@@ -70,7 +70,9 @@
               <a href='./wbstrava/wbstrava.html'><img src="./images/wbstravathumbnail.png" alt="Winter Biking" height="299" width="313"></a>
             </td>
             <td>
-              <p id="subtitle"><strong>Strava Winter Biking</strong>. This map attempts to use <a href="http://www.strava.com">Strava</a> segment data to show biking conditions.</p>
+              <p id="subtitle"><strong>Strava Winter Biking</strong>.</p>
+							<p id="subtitle"><strong>This map no longer works since Strava changed their API due to privacy concerns.</strong>.</p>
+							<p id="subtitle">This map attempts to use <a href="http://www.strava.com">Strava</a> segment data to show biking conditions.</p>
               <p id="subtitle">The theory is that cyclists will travel slower when conditions are not favourable and, by comparing recent times to historical times, cycling conditions can be approximated. A Python script is run to search for Strava segments and add them to a <a href="http://www.cartodb.com">CartoDB</a> database. A second Python script can then be run periodically to collect all segment efforts over a recent time span and the current leaderboard for that segment.</p>
               <p id="subtitle">There are some shortcomings though. To see the conditions for a particular segment, it must have been added to the database. Segment suggestions can be sent to the e-mail below. The data also require timely updates. This means both that people must ride the segments and upload the data to Strava and that the Python script to update the segment times must be run frequently. There will also be a response lag in the data due to extreme weather events. Currently, "recent" segment efforts means the last seven days. Some experimenting will be done with this time window as too long means the data will not respond to weather events quickly but too short will likely mean no data as segment efforts will quickly become outdated.</p>
             </td>
