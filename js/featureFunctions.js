@@ -182,6 +182,36 @@ function geoError() {
   alert("Sorry, couldn't find you!");
 }
 
+function goToBookmark(value) {
+	if (value == 'Edmonton') {
+		map.setView([53.53, -113.53], 12);
+	};
+	if (value == 'Calgary') {
+		map.setView([51.05, -114.07], 12);
+	};
+	if (value == 'Ottawa') {
+		map.setView([45.32, -75.81], 12);
+	};
+	if (value == 'Montreal') {
+		map.setView([45.54, -73.65], 10);
+	};
+	if (value == 'London') {
+		map.setView([42.975, -81.25], 12);
+	};
+	if (value == 'Toronto') {
+		map.setView([43.73, -79.4], 10);
+	};
+	if (value == 'Prince Rupert') {
+		map.setView([54.28, -130.31], 12);
+	};
+	if (value == 'Grande Prairie') {
+		map.setView([55.17, -118.79], 14);
+	};
+	if (value == 'Vancouver') {
+		map.setView([49.2055, -123.049], 11);
+	};
+}
+
 function deleteLayers(layer) {
   drawnItems.removeLayer(layer);
   var q = "DELETE FROM winterbiking WHERE cartodb_id = " + layer.feature.properties.cartodb_id;

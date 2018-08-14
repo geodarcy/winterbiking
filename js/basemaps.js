@@ -10,11 +10,11 @@ var osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});
 var stamenTonerLite = new L.TileLayer(stamenTonerLiteUrl, {attribution: stamenTonerLiteAttrib});
 var cartoDB = new L.TileLayer(cartoDBUrl, {attribution: cartoDBAttrib});
 var imagery = new L.TileLayer(imageryUrl, {attribution: imageryAttrib});
-var openPrecipitation = L.tileLayer('http://{s}.tile.openweathermap.org/map/precipitation_cls/{z}/{x}/{y}.png', {
+var openPrecipitation = L.tileLayer('http://{s}.tile.openweathermap.org/map/precipitation_cls/{z}/{x}/{y}.png?appid={1120f384e259d527e8a4449f3b942382}', {
 attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
 opacity: 0.5
 });
-var openTemperature = L.tileLayer('http://{s}.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png', {
+var openTemperature = L.tileLayer('http://{s}.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png?appid={1120f384e259d527e8a4449f3b942382}', {
 attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
 opacity: 0.5
 });

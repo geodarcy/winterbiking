@@ -40,23 +40,6 @@
         center: [53.53, -113.53],
         zoom: 13
       });
-	/*		if ("geolocation" in navigator)
-			{
-				console.log("Trying navigator");
-				navigator.geolocation.getCurrentPosition(function(position) {map.panTo([position.coords.latitude, position.coords.longitude])});
-			}
-			else
-			{ 
-				try
-				{
-					console.log("Trying GeoIP");
-					L.GeoIP.centerMapOnPosition(map);
-				}
-				catch (e)
-				{
-					console.log(e);
-				}*/
-//			}
 
       var bikeJson;
       var url = "https://geodarcy.cartodb.com/api/v2/sql?format=geojson&q=SELECT * FROM wbstrava";
